@@ -1,17 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doccanvument</title>
+    <title>Bezier Curve Visualizer</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <meta name="title" content="Bezier Curve Visualizer">
+    <meta name="description" content="A site to visualize manipulable, animated Cubic Bezier curves.">
 
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pineapplerind.ga/bezier-visualizer/">
+    <meta property="og:title" content="Bezier Curve Visualizer">
+    <meta property="og:description" content="A site to visualize manipulable, animated Cubic Bezier curves.">
+    <meta property="og:image" content="https://pineapplerind.ga/bezier-visualizer/thumb.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pineapplerind.ga/bezier-visualizer/">
+    <meta property="twitter:title" content="Bezier Curve Visualizer">
+    <meta property="twitter:description" content="A site to visualize manipulable, animated Cubic Bezier curves.">
+    <meta property="twitter:image" content="https://pineapplerind.ga/bezier-visualizer/thumb.png">
+
+    <meta name="keywords" content="bezier, cubic bezier, curve animations">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+</head>
+
+<body>
+    <div id="controls">
+        <h1>Controls</h1>
+        <button id="playBtn" onclick="playing = !playing;if (t <= 0.01) clearTrail();evaluatePlaying()">Stop</button>
+        <button onclick="replay()">Restart</button>
+        <hr>
+        <p>Easing Function (In the animation)</p>
+        <select id="easeOption">
+            <option>linear</option>
+            <option selected>quadraticEaseInOut</option>
+            <option>exponentialEaseInOut</option>
+            <option>bounce</option>
+        </select>
+        <hr>
+        <button onclick="resetCurve()">Reset Curve</button>
+    </div>
+    <div class="banner"
+        onclick="this.classList.add('hidden');setTimeout(function(){this.remove},500);localStorage.setItem('bezierBannerState','doNotShowAgain')">
+        Hey there! This is a <b>cubic bezier curve visualizer.</b> Update coming soon (next few weeks)! You'll be able to add points. (Click to dismiss)
+    </div>
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
-    <h1>JUST DO IT.</h1>
+    <p id="speedometer" style="font-family:monospace;position:fixed;top:0;right:0"></p>
     <script src="index.js"></script>
+    <script>
+
+    </script>
 </body>
+
 </html>
