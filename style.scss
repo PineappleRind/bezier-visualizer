@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Bevan&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 * {
     margin: 0;
     font-family: Inter, sans-serif;
@@ -10,6 +11,7 @@ body {
     width: 100vw;
     overscroll-behavior-y: none;
     overflow: hidden;
+    z-index:-1;
 }
 
 body {
@@ -22,7 +24,7 @@ body {
 canvas {
     position: absolute;
     top: 0;
-    z-index: -1;
+    z-index: 0;
     opacity: 1;
 }
 
@@ -31,33 +33,12 @@ canvas {
     opacity: 0.5;
     pointer-events: none;
 }
-
-.banner {
-    z-index: 6;
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: dodgerblue;
-    transition: 0.5s;
-    cursor: pointer;
-    text-align: center;
-    padding: 10px;
-
-}
-
-.hidden {
-    transform: translateY(-100%)
-}
-
 #controls {
     top:0;
     background: #111131ef;
     position: fixed;
     right:0;
     max-width:300px;
-   //-filter:blur(30px);
     height:100vh;
     box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.4);
     z-index: 30;
@@ -77,18 +58,19 @@ canvas {
         border-radius: 20px;
         height: 20px;
         font-size:30px;
+        transform:  scale(1.4);
         border: 1px solid rgba(255, 255, 255, 0.3);
         color: rgba(255, 255, 255, 0.808);
-        background-color: rgba(255, 255, 255, 0.178);
+        background-color: #111131ef;
         &:hover {
-            background-color: rgba(255, 255, 255, 0.267);
-        }
+           border: 1px solid rgba(255,255,255,0.6)
+;        }
     }
     &.hidden {
         transform: translateX(100%)
     }
     &.hidden #minimize {
-        transform: rotate(45deg)
+        transform: rotate(495deg);
     }
 }
 
@@ -167,3 +149,21 @@ form p#close:hover {
     opacity:0;
     transform: translateY(10px)
 }
+[construction] {position: relative;overflow:hidden;
+&:after{
+    position: absolute;
+    top:0;
+    right:0;bottom:0;left:0;
+    content: 'UNDER CONSTRUCTION';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight:900;
+    font-family: 'Bevan','Rockwell','Impact', sans-serif;
+    cursor: not-allowed;
+    background: rgba(30, 38, 105, 0.938);
+    border: 2px dashed rgba(55, 65, 211, 0.9);
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+}}

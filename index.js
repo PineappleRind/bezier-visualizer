@@ -1,18 +1,25 @@
 function lerp(start, end, amt) {
   return Math.round(((1 - amt) * start + amt * end) * 100) / 100;
 }
-function quadraticEaseInOut(x) {
+
+function easeInOutQuad(x) {
   return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
 }
-function exponentialEaseInOut(x) {
-  return x === 0
-    ? 0
-    : x === 1
-      ? 1
-      : x < 0.5
-        ? Math.pow(2, 20 * x - 10) / 2
-        : (2 - Math.pow(2, -20 * x + 10)) / 2;
+
+function easeInOutExpo(x) {
+  return x === 0 ?
+    0 :
+    x === 1 ?
+      1 :
+      x < 0.5 ?
+        Math.pow(2, 20 * x - 10) / 2 :
+        (2 - Math.pow(2, -20 * x + 10)) / 2;
 }
+
+function easeInOutQuart(x) {
+  return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+}
+
 function bounce(x) {
   const n1 = 7.5625;
   const d1 = 2.75;
@@ -27,16 +34,17 @@ function bounce(x) {
     return n1 * (x -= 2.625 / d1) * x + 0.984375;
   }
 }
+
 function linear(x) {
   return x;
 }
-var colors = ["red", "blue", "lime", "yellow", "purple", "orange", "green", "pink", "rebeccapurple", "yellowgreen", "dodgerblue", "magenta", "indianred", "darkblue", "darkkhaki", "darksalmon", "darkslategray", "orangered", "seagreen"];
+
 var points = {
   data: [
-      [331, 351],
-      [38, 351],
-      [331, 14],
-      [38, 14],
+    [331, 351],
+    [38, 351],
+    [331, 14],
+    [38, 14],
   ],
 
   computed: [],
@@ -61,24 +69,55 @@ if (!save.get()) {
 } else {
   points = save.get();
 }
+
+function rainbow(number) {
+  const hue = number * 137.50776405; // use golden angle approximation
+  return `hsl(${hue},100%,50%)`;
+}
+var colors = []
+
+for (let i = 0; i < points.data.length; i++) {
+  colors.push(rainbow(i))
+}
+
 let iteration = points.data.length - 1;
 var playing = true;
-var canv = document.getElementById("canvas"),
-  ctx = canv.getContext("2d"),
-  canv2 = document.getElementById("canvas2"),
-  ctx2 = canv2.getContext("2d"),
-  background = "#000020",
-  t = 0,
-  speed = 0.002,
-  easedT,
-  inter,
-  easeSelected = window.quadraticEaseInOut;
-function addPoint() {
-  points.data.push([0, 0])
+
+var canvas = {
+  element: document.getElementById("canvas"),
+  context: document.getElementById("canvas").getContext("2d"),
+  clear: function () {
+    canvas.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
+  },
+
+}
+var trail = {
+  element: document.getElementById("canvas2"),
+  context: document.getElementById("canvas2").getContext("2d"),
+  clear: function () {
+    trail.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
+  }
+}
+var settings = {
+  speed: 0.002,
+  ease: window.easeInOutQuart
+}
+
+var t = 0,
+  colorIteration = 1
+function addPoint(x, y) {
+  colorIteration++
+  colors.push(rainbow(colorIteration))
+  if (!x) x = 0
+  if (!y) y = 0
+  points.data.push([x, y])
   iteration = points.data.length - 1;
   drawAndConnectInitialPoints()
+  save.set()
 }
+
 function com(easedT) {
+  iteration = points.data.length - 1;
   points.computed = []
   for (let o = 0; o < iteration; o++) points.computed.push([])
   for (let i = 0; i < iteration; i++) {
@@ -116,70 +155,65 @@ function com(easedT) {
     }
   }
 }
-
-canv.setAttribute('height', window.innerHeight)
-canv.setAttribute('width', window.innerWidth)
-canv2.setAttribute('height', window.innerHeight)
-canv2.setAttribute('width', window.innerWidth)
+canvas.element.setAttribute('height', window.innerHeight)
+canvas.element.setAttribute('width', window.innerWidth)
+trail.element.setAttribute('height', window.innerHeight)
+trail.element.setAttribute('width', window.innerWidth)
 onresize = () => {
-  canv.setAttribute('height', window.innerHeight)
-  canv.setAttribute('width', window.innerWidth)
-  canv2.setAttribute('height', window.innerHeight)
-  canv2.setAttribute('width', window.innerWidth);
+  canvas.element.setAttribute('height', window.innerHeight)
+  canvas.element.setAttribute('width', window.innerWidth)
+  trail.element.setAttribute('height', window.innerHeight)
+  trail.element.setAttribute('width', window.innerWidth);
   drawAndConnectInitialPoints()
 }
 
 function point(x, y, rad, col) {
-  ctx.beginPath();
-
-  ctx.arc(x, y, rad, 0, 2 * Math.PI, true);
-  ctx.closePath();
-  if (!col) ctx.fillStyle = "#ffffff";
-  else ctx.fillStyle = col;
-  ctx.fill();
+  canvas.context.beginPath();
+  canvas.context.arc(x, y, rad, 0, 2 * Math.PI, true);
+  canvas.context.closePath();
+  if (!col) canvas.context.fillStyle = "#ffffff";
+  else canvas.context.fillStyle = col;
+  canvas.context.fill();
 }
+
 function line(startx, starty, finishx, finishy) {
-  ctx.beginPath();
-  ctx.strokeStyle = "white";
-  ctx.moveTo(startx, starty, 0);
-  ctx.lineTo(finishx, finishy);
-  ctx.stroke(); // Bottom side line
+  canvas.context.beginPath();
+  canvas.context.strokeStyle = "#ffffff";
+  canvas.context.moveTo(startx, starty);
+  canvas.context.lineTo(finishx, finishy);
+  canvas.context.stroke(); // Bottom side line
 }
 
 function evaluatePlaying() {
-  if (playing == true) window.requestAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Stop");
+  if (playing === true) window.requestAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Stop");
   else window.cancelAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Play")
 }
 window.requestAnimationFrame(advance)
+
 function replay() {
-  window.cancelAnimationFrame(advance)
   t = 0;
-  clearCanvas(
-  )
-  clearTrail()
+  canvas.clear()
+  trail.clear()
+  window.cancelAnimationFrame(advance)
   window.requestAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Stop");
   playing = true;
 }
+
 function advance() {
-  clearCanvas();
+  canvas.clear();
   document.getElementById("speedometer").innerHTML =
-    "t=" + easeSelected(t).toFixed(3);
-  t += speed;
-  easedT = easeSelected(t);
+    "t=" + settings.ease(t).toFixed(1);
+  t += settings.speed;
+  easedT = settings.ease(t);
   com(easedT);
   let final = drawMidPoints();
   drawTrail(final[0], final[1])
   drawAndConnectInitialPoints();
-  if (t >= 1 || playing == false) window.cancelAnimationFrame(advance);
+  if (t >= 1 || playing === false) window.cancelAnimationFrame(advance);
   else window.requestAnimationFrame(advance);
 }
 
-function clearCanvas() {
-  ctx.clearRect(0, 0, canv.width, canv.height);
-}
-function clearTrail() {
-  ctx2.clearRect(0, 0, canv.width, canv.height);
-}
+
 function resetCurve() {
   points = {
     data: [
@@ -187,7 +221,8 @@ function resetCurve() {
       [38, 351],
       [331, 14],
       [38, 14],
-    ], computed:  []
+    ],
+    computed: []
   };
   save.set();
 }
@@ -211,61 +246,72 @@ onmousemove = function (e) {
 ontouchmove = function (e) {
   pointHandler(e.touches[0]);
 };
+
 function pointHandler(windowEvent) {
-  if (mouseIsDown == true) {
+
+  if (mouseIsDown === true) {
     var x = windowEvent.clientX;
     var y = windowEvent.clientY;
     for (var i = 0; i < points.data.length; i++) {
-      if (
-        intersectingPoints(x,y,i) == true
-      ) {
-        dragging = i;
-        if (dragging == i) {
-          if (x < 0) break;
-          if (y < 0) break;
-          if (x > window.innerWidth) break;
-          if (y > window.innerHeight) break;
-          points.data[i][0] = x;
-          points.data[i][1] = y;
-          clearCanvas();
-          drawAndConnectInitialPoints()
+      if (intersectingPoints(x, y, i) === true) {
+        console.log(intersectingPoints(x, y, i))
+        dragging = i
+        if (x < 0) break;
+        if (y < 0) break;
+        if (x > window.innerWidth) break;
+        if (y > window.innerHeight) break;
+        points.data[i][0] = x;
+        points.data[i][1] = y;
+        canvas.clear();
+        drawAndConnectInitialPoints()
+        save.set();
 
-          save.set();
-
-          break;
-        }
+        break;
       }
     }
   }
 }
+
 function removePointHandler(evt) {
-    var x = evt.clientX;
-    var y = evt.clientY;
-    for (var i = 0; i < points.data.length; i++) {
-      if (intersectingPoints(x,y,i) && points.data.length <= 2) {
-        alert('You can\'t have less than 2 points!')
-        break;
-      }
-      if (
-        intersectingPoints(x,y,i) == true
-        &&
-        points.data.length > 2
-      ) {
-        dragging = i;
-        if (dragging == i) {
-          points.data = arrRemove(points.data,points.data[i])
-          clearCanvas();
-          
-          save.set();
-          iteration = points.data.length - 1
-          drawAndConnectInitialPoints()
-          
-          break;
-        }
-      } 
-      
+  var x = evt.clientX;
+  var y = evt.clientY;
+  var iter = 0
+  for (var i = 0; i < points.data.length; i++) {
+    console.log(x + ' ' + y + '\n' + points.data[i][0] + ' ' + points.data[i][1] + '\n' + intersectingPoints(x, y, i))
+
+    if (intersectingPoints(x, y, i) === true && points.data.length <= 2) {
+      alert('You can\'t have less than 2 points!')
+      console.log('Broken due to less than 2points')
+      break;
+
     }
+    if ( intersectingPoints(x, y, i) === true && points.data.length > 2) {
+      dragging = i
+      console.log(dragging)
+      points.data = arrRemove(points.data, points.data[i])
+      canvas.clear();
+      save.set();
+      iteration = points.data.length - 1
+      drawAndConnectInitialPoints()
+      dragging = -1
+      break;
+    } else {
+      iter++
+      console.log(`${iter} ${points.data.length}`)
+      if (i == points.data.length - 1 && iter == points.data.length - 1) {
+        break
+      }
+      else if (i == points.data.length - 1 && iter == points.data.length) {
+        addPoint(x, y)
+        break
+      }
+    }
+
+
+
+  }
 }
+
 function arrRemove(arr, value) {
   var index = arr.indexOf(value);
   if (index > -1) {
@@ -274,18 +320,21 @@ function arrRemove(arr, value) {
   return arr;
 }
 
-ondblclick = e => {
-
+canvas.element.ondblclick = e => {
+  console.log(e.target)
   removePointHandler(e)
+}
 
-}
+
+
 function intersectingPoints(x, y, i) {
-  return ((((x >= points.data[i][0] && x <= points.data[i][0] + 20) ||
-    (x <= points.data[i][0] && x >= points.data[i][0] - 20)) &&
-    ((y >= points.data[i][1] && y <= points.data[i][1] + 20) ||
-      (y <= points.data[i][1] && y >= points.data[i][1] - 20))) ||
-    dragging == i)
+  return ((((x >= points.data[i][0] && x <= points.data[i][0] + 10) ||
+    (x <= points.data[i][0] && x >= points.data[i][0] - 10)) &&
+    ((y >= points.data[i][1] && y <= points.data[i][1] + 10) ||
+      (y <= points.data[i][1] && y >= points.data[i][1] - 10))) ||
+    dragging === i)
 }
+
 function drawAndConnectInitialPoints() {
   for (var i = 0; i < points.data.length - 1; i++) {
     line(
@@ -304,7 +353,7 @@ function drawMidPoints() {
   for (let i = 0; i < points.computed.length; i++) {
     for (let j = 0; j < points.computed[i].length; j++) {
       let radius
-      i == points.computed.length - 1 ? radius = 10 : radius = 3
+      i === points.computed.length - 1 ? radius = 10 : radius = 2
       point(
         points.computed[i][j][0],
         points.computed[i][j][1],
@@ -314,19 +363,21 @@ function drawMidPoints() {
         points.computed[i][j][0], points.computed[i][j][1],
         points.computed[i][j - 1][0], points.computed[i][j - 1][1]
       )
-      if (i == points.computed.length - 1) return [points.computed[i][j][0],
-      points.computed[i][j][1]]
+      if (i === points.computed.length - 1) return [points.computed[i][j][0],
+      points.computed[i][j][1]
+      ]
     }
   }
 }
+
 function drawTrail(x, y) {
-  ctx2.beginPath();
-  ctx2.fillStyle = "#ffffff";
-  ctx2.arc(x, y, 10, 0, 2 * Math.PI, true);
-  ctx2.closePath();
-  ctx2.fill();
+  trail.context.beginPath();
+  trail.context.fillStyle = "#ffffff";
+  trail.context.arc(x, y, 10, 0, 2 * Math.PI, true);
+  trail.context.closePath();
+  trail.context.fill();
 }
 
 document.getElementById("easeOption").oninput = function () {
-  easeSelected = window[document.getElementById("easeOption").value];
+  settings.ease = window[document.getElementById("easeOption").value];
 };
