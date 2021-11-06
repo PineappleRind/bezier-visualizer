@@ -10,10 +10,10 @@ function easeInOutExpo(x) {
 	return x === 0 ?
 		0 :
 		x === 1 ?
-		1 :
-		x < 0.5 ?
-		Math.pow(2, 20 * x - 10) / 2 :
-		(2 - Math.pow(2, -20 * x + 10)) / 2;
+			1 :
+			x < 0.5 ?
+				Math.pow(2, 20 * x - 10) / 2 :
+				(2 - Math.pow(2, -20 * x + 10)) / 2;
 }
 
 function easeInOutQuart(x) {
@@ -51,31 +51,48 @@ var points = {
 };
 
 var save = {
-	get: function() {
+	getData: function () {
 		return JSON.parse(localStorage.getItem("bezierSaveData"));
 	},
-	set: function() {
+	set: function () {
 		return localStorage.setItem("bezierSaveData", JSON.stringify(points));
 	},
 };
-
-//if (localStorage.getItem("bezierBannerState"))
-//document.querySelector(".banner").remove();
-
-if (!save.get()) {
+if (!save.getData()) {
 	save.set();
 } else {
-	points = save.get();
+	points.data = save.getData().data;
+	points.computed = save.getData().computed
 }
 
-function rainbow(number) {
+function goldenAngle(number) {
 	const hue = number * 137.50776405; // use golden angle approximation
 	return `hsl(${hue},100%,50%)`;
 }
+function rainbow(number) {
+	return (`hsl(${number*20},100%,50%)`)
+}
+function grayscale(number) {
+	let newnum = `hsl(0,0%,${number/points.data.length*100}%)`
+	console.log(newnum)
+	return newnum
+}
 var colors = []
+var settings = {
+	speed: 0.002,
+	ease: window.easeInOutQuad,
+	show: {
+		lines: true,
+		midpoints: true,
+		trail: true,
+		controlpoints: true,
+		finalmidpoint: true
+	},
+	colorAlgorithm: window.goldenAngle
+}
 
 for (let i = 0; i < points.data.length; i++) {
-	colors.push(rainbow(i))
+	colors.push(settings.colorAlgorithm(i))
 }
 
 let iteration = points.data.length - 1;
@@ -84,21 +101,16 @@ var playing = true;
 var canvas = {
 	element: document.getElementById("canvas"),
 	context: document.getElementById("canvas").getContext("2d"),
-	clear: function() {
+	clear: function () {
 		canvas.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	},
-
 }
 var trail = {
 	element: document.getElementById("canvas2"),
 	context: document.getElementById("canvas2").getContext("2d"),
-	clear: function() {
+	clear: function () {
 		trail.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	}
-}
-var settings = {
-	speed: 0.002,
-	ease: window.easeInOutQuart
 }
 
 var t = 0,
@@ -111,7 +123,7 @@ function addPoint(x, y) {
 	if (!y) y = 0
 	points.data.push([x, y])
 	iteration = points.data.length - 1;
-	drawAndConnectInitialPoints()
+	initialPoints()
 	save.set()
 }
 
@@ -163,7 +175,7 @@ onresize = () => {
 	canvas.element.setAttribute('width', window.innerWidth)
 	trail.element.setAttribute('height', window.innerHeight)
 	trail.element.setAttribute('width', window.innerWidth);
-	drawAndConnectInitialPoints()
+	initialPoints()
 }
 
 function point(x, y, rad, col) {
@@ -201,13 +213,13 @@ function replay() {
 function advance() {
 	canvas.clear();
 	document.getElementById("speedometer").innerHTML =
-		"t=" + settings.ease(t).toFixed(1);
+		"t=" + settings.ease(t).toFixed(2);
 	t += settings.speed;
 	easedT = settings.ease(t);
 	com(easedT);
 	let final = drawMidPoints();
 	drawTrail(final[0], final[1])
-	drawAndConnectInitialPoints();
+	initialPoints();
 	if (t >= 1 || playing === false) window.cancelAnimationFrame(advance);
 	else window.requestAnimationFrame(advance);
 }
@@ -227,21 +239,21 @@ function resetCurve() {
 
 var mouseIsDown = false;
 var dragging = -1;
-onmousedown = function() {
+onmousedown = function () {
 	mouseIsDown = true;
 };
-ontouchstart = function() {
+ontouchstart = function () {
 	mouseIsDown = true;
 };
 
-onmouseup = function() {
+onmouseup = function () {
 	mouseIsDown = false;
 	dragging = -1;
 };
-onmousemove = function(e) {
+onmousemove = function (e) {
 	pointHandler(e);
 };
-ontouchmove = function(e) {
+ontouchmove = function (e) {
 	pointHandler(e.touches[0]);
 };
 
@@ -252,7 +264,6 @@ function pointHandler(windowEvent) {
 		var y = windowEvent.clientY;
 		for (var i = 0; i < points.data.length; i++) {
 			if (intersectingPoints(x, y, i) === true) {
-				console.log(intersectingPoints(x, y, i))
 				dragging = i
 				if (x < 0) break;
 				if (y < 0) break;
@@ -261,7 +272,7 @@ function pointHandler(windowEvent) {
 				points.data[i][0] = x;
 				points.data[i][1] = y;
 				canvas.clear();
-				drawAndConnectInitialPoints()
+				initialPoints()
 				save.set();
 
 				break;
@@ -275,27 +286,23 @@ function removePointHandler(evt) {
 	var y = evt.clientY;
 	var iter = 0
 	for (var i = 0; i < points.data.length; i++) {
-		console.log(x + ' ' + y + '\n' + points.data[i][0] + ' ' + points.data[i][1] + '\n' + intersectingPoints(x, y, i))
-
 		if (intersectingPoints(x, y, i) === true && points.data.length <= 2) {
 			alert('You can\'t have less than 2 points!')
-			console.log('Broken due to less than 2points')
 			break;
 
 		}
 		if (intersectingPoints(x, y, i) === true && points.data.length > 2) {
 			dragging = i
-			console.log(dragging)
 			points.data = arrRemove(points.data, points.data[i])
 			canvas.clear();
 			save.set();
 			iteration = points.data.length - 1
-			drawAndConnectInitialPoints()
+			initialPoints()
 			dragging = -1
 			break;
 		} else {
 			iter++
-			console.log(`${iter} ${points.data.length}`)
+
 			if (i == points.data.length - 1 && iter == points.data.length - 1) {
 				break
 			} else if (i == points.data.length - 1 && iter == points.data.length) {
@@ -321,55 +328,90 @@ canvas.element.ondblclick = e => {
 
 function intersectingPoints(x, y, i) {
 	return ((((x >= points.data[i][0] && x <= points.data[i][0] + 10) ||
-				(x <= points.data[i][0] && x >= points.data[i][0] - 10)) &&
-			((y >= points.data[i][1] && y <= points.data[i][1] + 10) ||
-				(y <= points.data[i][1] && y >= points.data[i][1] - 10))) ||
+		(x <= points.data[i][0] && x >= points.data[i][0] - 10)) &&
+		((y >= points.data[i][1] && y <= points.data[i][1] + 10) ||
+			(y <= points.data[i][1] && y >= points.data[i][1] - 10))) ||
 		dragging === i)
 }
 
-function drawAndConnectInitialPoints() {
-	for (var i = 0; i < points.data.length - 1; i++) {
-		line(
-			points.data[i][0],
-			points.data[i][1],
-			points.data[i + 1][0],
-			points.data[i + 1][1]
-		);
+function initialPoints(obj) {
+	if (settings.show.lines == true) {
+		for (var i = 0; i < points.data.length - 1; i++) {
+			line(
+				points.data[i][0],
+				points.data[i][1],
+				points.data[i + 1][0],
+				points.data[i + 1][1]
+			);
+		}
 	}
 	for (var i = 0; i < points.data.length; i++) {
-		point(points.data[i][0], points.data[i][1], 10, colors[i]); // Anchor dots
+		if (settings.show.controlpoints === true) point(points.data[i][0], points.data[i][1], 10, colors[i]); // Anchor dots
 	}
 }
 
 function drawMidPoints() {
 	for (let i = 0; i < points.computed.length; i++) {
 		for (let j = 0; j < points.computed[i].length; j++) {
-			let radius
-			i === points.computed.length - 1 ? radius = 10 : radius = 2
-			point(
-				points.computed[i][j][0],
-				points.computed[i][j][1],
-				radius
-			)
-			if (j > 0) line(
-				points.computed[i][j][0], points.computed[i][j][1],
-				points.computed[i][j - 1][0], points.computed[i][j - 1][1]
-			)
+			let radius = 3
+			if (i === points.computed.length - 1 && settings.show.finalmidpoint === true) radius = 10
+			if (settings.show.midpoints == true || (radius == 10 && settings.show.finalmidpoint == true)) {
+				point(
+					points.computed[i][j][0],
+					points.computed[i][j][1],
+					radius
+				)
+			}
+			if (settings.show.lines == true) {
+				if (j > 0) line(
+					points.computed[i][j][0], points.computed[i][j][1],
+					points.computed[i][j - 1][0], points.computed[i][j - 1][1]
+				)
+			}
 			if (i === points.computed.length - 1) return [points.computed[i][j][0],
-				points.computed[i][j][1]
+			points.computed[i][j][1]
 			]
 		}
 	}
 }
 
 function drawTrail(x, y) {
+	if (settings.show.trail == false) return
 	trail.context.beginPath();
-	trail.context.fillStyle = "#ffffff";
+	trail.context.fillStyle = '#ffffff';
 	trail.context.arc(x, y, 10, 0, 2 * Math.PI, true);
 	trail.context.closePath();
 	trail.context.fill();
 }
 
-document.getElementById("easeOption").oninput = function() {
+document.getElementById("easeOption").oninput = function () {
 	settings.ease = window[document.getElementById("easeOption").value];
 };
+
+document.getElementById("colorOption").oninput = function () {
+	settings.colorAlgorithm = window[document.getElementById("colorOption").value];
+	colors = []
+	for (let i = 0; i < points.data.length; i++) {
+		colors.push(settings.colorAlgorithm(i))
+	}
+	
+};
+oninput = e => {
+	let target = e.target
+	let toChange = target.getAttribute('id')
+	settings.show[toChange] = !settings.show[toChange]
+}
+function computeTextColor(bgColor) {
+	var color = (bgColor.value.charAt(0) === '#') ? bgColor.value.substring(1, 7) : bgColor.value;
+	console.log(color)
+	var r = parseInt(color.substring(0, 2), 16); // hexToR
+	var g = parseInt(color.substring(2, 4), 16); // hexToG
+	var b = parseInt(color.substring(4, 6), 16); // hexToB
+	let final = (((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186) ?
+	'black' : 'white';
+	if (document.body.classList.contains(final)) return
+	else if (final == 'black' && document.body.classList.contains('white')) document.body.classList.remove('white')
+	else if (final == 'white' && document.body.classList.contains('black')) document.body.classList.remove('black')
+	else document.body.classList.add(final)
+	return 
+}

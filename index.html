@@ -23,52 +23,88 @@
     <meta property="twitter:image" content="https://pineapplerind.ga/bezier-visualizer/thumb.png">
 
     <meta name="keywords" content="bezier, cubic bezier, curve animations">
-    <meta name="robots" content="noindex, nofollow">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="language" content="English">
     <!-- stupid google verification -->
     <meta name="google-site-verification" content="oxcBZY-cAk2pug_UaT0mYbdbQfJnACzyXlyXqhL2lgs" />
-
+    <style id="textColorStyle">
+        * {
+            color: white
+        }
+    </style>
 </head>
 
 <body>
     <div id="controls">
         <div id="minimize" onclick="this.parentElement.classList.toggle('hidden')">&times;</div>
-        <h1 style="width:300px">Bezier Curve Visualizer</h1>
-        <h2 style="font-weight:200;font-size:25px;">how to use</h2>
-        <p>You can:
+        <div class="inner">
+
+            <h1 style="width:300px">Bezier Curve Visualizer</h1>
+            <h2 style="font-weight:200;font-size:25px;">how to use</h2>
+            <p>You can:
             <ul>
-<li><p>drag points and see how the curve changes</p></li>
-<li><p>change ease functions for the animation</p></li>
-<li><p>double tap/click on a point to remove it, or in a blank space to add a point</p></li>
-            </ul> 
+                <li>
+                    <p>drag points and see how the curve changes</p>
+                </li>
+                <li>
+                    <p>change ease functions for the animation</p>
+                </li>
+                <li>
+                    <p>double tap/click on a point to remove it, or in a blank space to add a point</p>
+                </li>
+            </ul>
             <hr>
-        <h2 style="font-weight:200;font-size:25px;">controls</h2>
-        <button id="playBtn" onclick="playing = !playing;if (t <= 0.01) clearTrail();evaluatePlaying()">Stop</button>
-        <button onclick="replay()">Restart</button>
-        <button onclick="resetCurve()">Reset Curve</button>
-        <br>
-        <p>Easing Function (In the animation)</p>
-        <select id="easeOption">
-            <option>linear</option>
-            <option>easeInOutQuad</option>
-            <option selected>easeInOutQuart</option>
-            <option>easeInOutExpo</option>
-            <option>bounce</option>
-        </select>
-        <!--<hr>
-        <div construction>
-            <h2 style="font-weight:200;font-size:25px;">view</h2>
-            <input type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
-            <input type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
-            <input type="checkbox" id="trail"><label for="trail">Show Trail</label>
-        </div>-->
-        <hr>
-        <a href="https://github.com/PineappleRind/bezier-visualizer/issues">Report bugs on the GitHub</a>
+            <h2 style="font-weight:200;font-size:25px;">controls</h2>
+            <button id="playBtn"
+                onclick="playing = !playing;if (t <= 0.01) clearTrail();evaluatePlaying()">Stop</button>
+            <button onclick="replay()">Restart</button>
+            <button onclick="resetCurve()">Reset Curve</button>
+            <br>
+            <hr>
+            <p>Easing function in the animation</p>
+            <select id="easeOption">
+                <option>linear</option>
+                <option selected>easeInOutQuad</option>
+                <option>easeInOutQuart</option>
+                <option>easeInOutExpo</option>
+                <option>bounce</option>
+            </select>
+            <hr>
+            <div>
+                <h2 style="font-weight:200;font-size:25px;">view</h2>
+                <input checked type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
+                <input checked type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
+                <input checked type="checkbox" id="trail"><label for="trail">Show Trail</label><br>
+                <input checked type="checkbox" id="controlpoints"><label for="controlpoints">Show Control Points</label><br>
+                <input checked type="checkbox" id="finalmidpoint"><label for="finalmidpoint">Show final midpoint (large white dot)</label>
+            </div>
+            <hr>
+            <div>
+                <p>Control point color scheme</p>
+                <select id="colorOption">
+                    <option selected name="goldenAngle">goldenAngle</option>
+                    <option name="rainbow">rainbow</option>
+                    <option name="grayscale">grayscale</option>
+                </select>
+            </div>
+            <hr>
+            <p>Background color</p>
+            <input type="color" id="bgColorPicker"
+                oninput="document.body.style.backgroundColor = this.value; computeTextColor(this);"><br><br>
+                <button onclick="document.body.style.backgroundColor = '#000020';this.previousElementSibling.value = '000020';computeTextColor(this)">Reset</button>
+            <hr>
+            <a href="https://github.com/PineappleRind/bezier-visualizer/issues"><button>Report bugs or give
+                    feedback</button></a>
+            <br>
+            <a href="https://github.com/PineappleRind/bezier-visualizer/releases"><button>What's new?</button></a>
+            <br>
+            <a href="https://github.com/PineappleRind/bezier-visualizer/releases"><button>Planned features</button></a>
+            <br><br>
+        </div>
     </div>
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
-    <p id="speedometer" style="font-family:monospace;position:fixed;top:0;right:0;z-index:59;"></p>
+    <p id="speedometer" style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;"></p>
     <script src="index.js"></script>
     <script>
 
