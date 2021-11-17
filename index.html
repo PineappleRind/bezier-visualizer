@@ -38,8 +38,7 @@
     <div id="controls">
         <div id="minimize" onclick="this.parentElement.classList.toggle('hidden')">&times;</div>
         <div class="inner">
-
-            <h1 style="width:300px">Bezier Curve Visualizer</h1>
+            <h1>Bezier Curve Visualizer</h1>
             <h2 style="font-weight:200;font-size:25px;">how to use</h2>
             <p>You can:
             <ul>
@@ -75,10 +74,11 @@
                 <input checked type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
                 <input checked type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
                 <input checked type="checkbox" id="trail"><label for="trail">Show Trail</label><br>
-                <input checked type="checkbox" id="controlpoints"><label for="controlpoints">Show Control Points</label><br>
-                <input checked type="checkbox" id="finalmidpoint"><label for="finalmidpoint">Show final midpoint (large white dot)</label>
+                <input checked type="checkbox" id="controlpoints"><label for="controlpoints">Show Control
+                    Points</label><br>
+                <input checked type="checkbox" id="finalmidpoint"><label for="finalmidpoint">Show final midpoint (large
+                    white dot)</label>
             </div>
-            <hr>
             <div>
                 <p>Control point color scheme</p>
                 <select id="colorOption">
@@ -91,21 +91,53 @@
             <p>Background color</p>
             <input type="color" id="bgColorPicker"
                 oninput="document.body.style.backgroundColor = this.value; computeTextColor(this);"><br><br>
-                <button onclick="document.body.style.backgroundColor = '#000020';this.previousElementSibling.value = '000020';computeTextColor(this)">Reset</button>
+            <button
+                onclick="document.body.style.backgroundColor = '#000020';this.previousElementSibling.value = '000020';computeTextColor(this)">Reset
+                background color</button>
+            <!--<br>
+            <hr>
+            <div>
+                <p>Choose a preset to load:</p>
+                
+                <select id="presetSelectChoice">
+                    <option>Loading presets...</option>
+                </select>
+                <br>
+                <p>This is the preset editor! You can open this to create, edit, and delete your curve presets.</p>
+            <button onclick="presetEditorPage(0)">Open Preset Editor...</button>
+            </div>
+        
+            <br>
+            <hr>
+            <div construction>
+                <h2 style="font-weight:200;font-size:25px;">data storage</h2>
+                <p>In this section there are a few tools you can use to save your curves as presets.</p>
+                <br>
+                <p>This is your data. It stores your current curve and your presets.</p>
+                <textarea id="saveDataTextarea"></textarea>
+                <p>To load save data, paste your save data into the box above and click the Load Save Data button.</p>
+                <button>Load Save Data</button>
+            </div>-->
+            <br><br>
             <hr>
             <a href="https://github.com/PineappleRind/bezier-visualizer/issues"><button>Report bugs or give
                     feedback</button></a>
             <br>
             <a href="https://github.com/PineappleRind/bezier-visualizer/releases"><button>What's new?</button></a>
             <br>
-            <a href="https://github.com/PineappleRind/bezier-visualizer/releases"><button>Planned features</button></a>
-            <br><br>
+            <a href="https://github.com/PineappleRind/bezier-visualizer/projects"><button>Planned features</button></a>
+            <br><br><br><br>
         </div>
     </div>
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
-    <p id="speedometer" style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;"></p>
+    <div id="modalOverlay"></div>
+    <p id="speedometer"
+        style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">
+    </p>
     <script src="index.js"></script>
+    <!--<script src="presetEditor.js"></script>
+    <script>document.getElementById('presetSelectChoice').innerHTML = getPresetSelectHTML()</script>-->
     <script>
 
     </script>

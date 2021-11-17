@@ -13,12 +13,14 @@ body {
 
 body.black * {
     color: black;
-   
+
 }
+
 body.black {
     --background-color: rgba(0, 0, 0, 0.1);
     --border: 1px solid rgba(0, 0, 0, 0.3);
 }
+
 html,
 body {
     height: 100vh;
@@ -53,32 +55,34 @@ canvas {
     background: var(--background-color);
     position: fixed;
     right: 0;
-    max-width: 300px;
-    height:100vh;
-    z-index: 30;
+    width: calc(225px + 20%);
+    height: 100%;
+    z-index: 9;
     border-radius: 20px 0 0px 20px;
-    transition: 0.5s cubic-bezier(.04,.91,.54,.99);
+    transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     border: var(--border);
     border-right: 0;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+
     .inner {
         overflow-y: scroll;
-        overflow-x:hidden;
-        height:100vh;
-        transition: 0.5s cubic-bezier(.04,.91,.54,.99);
+        overflow-x: hidden;
+        height: 100vh;
+        transition: 0.5s cubic-bezier(.04, .91, .54, .99);
         padding: 30px;
     }
+
     #minimize {
         transition: 0.5s;
         position: absolute;
-        left:-30px;
+        left: -30px;
         text-shadow: 0 0 10px black;
         top: 10px;
         padding: 2px;
         line-height: 17px;
         cursor: pointer;
-        z-index:10;
+        z-index: 10;
         font-weight: 200;
         border-radius: 20px;
         height: 20px;
@@ -193,7 +197,7 @@ form p#close:hover {
         right: 0;
         bottom: 0;
         left: 0;
-        content: 'UNDER CONSTRUCTION';
+        content: 'Under construction';
         display: flex;
         align-items: center;
         justify-content: center;
@@ -201,8 +205,114 @@ form p#close:hover {
         font-family: 'Bevan', 'Rockwell', 'Impact', sans-serif;
         cursor: not-allowed;
         background: rgba(30, 38, 105, 0.938);
+        border-radius: 10px;
         border: 2px dashed rgba(55, 65, 211, 0.9);
         backdrop-filter: blur(3px);
         -webkit-backdrop-filter: blur(3px);
     }
+}
+
+#modalOverlay {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: 0;
+    pointer-events: none;
+    z-index: 10;
+    transition: 0.5s;
+}
+
+#modalOverlay.showing {
+    background: rgba(0, 0, 0, 0.4);
+    pointer-events: all;
+}
+
+.modal {
+    transition: 0.5s;
+    backdrop-filter: blur(14px) opacity(0);
+    transform: translateY(20px);
+    display: block;
+    padding: 40px;
+    max-height: 95vh;
+    overflow-y:scroll;
+    min-width: 300px;
+    position: relative;
+    opacity: 0;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.modal h1 {
+    margin: 10px;
+}
+
+.modal #close {
+    font-size: 27px;
+    position: absolute;
+    top:10px;
+    margin:0;
+    right:10px;
+    cursor:pointer;
+}
+
+.modal.showing {
+    transform: translateY(0px);
+    opacity: 1;
+    backdrop-filter: blur(14px) opacity(1) !important;
+}
+
+.modal .preset {
+    padding: 20px;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
+    border-radius: 20px;
+    margin: 10px;
+}
+
+.modal .preset h1 {
+    font-size: larger;
+    margin: 0;
+}
+
+.toast {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    margin: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+    padding: 10px;
+    z-index: 11;
+    color: white;
+    transform: translateY(-50px) translateX(-50%);
+    opacity:0;
+    transition: 0.5s;
+    font-size: 25px;
+    backdrop-filter:blur(14px) opacity(0);
+}
+
+.toast.showing {
+    opacity:1;
+    backdrop-filter:blur(14px) opacity(1);
+    transform: translateX(-50%);
+    left: 50%;
+}
+
+textarea, input[type=text] {
+    border: 1px solid rgba(255, 255, 255, .4);
+    background: rgba(255, 255, 255, .03);
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    font-family: monospace
 }
