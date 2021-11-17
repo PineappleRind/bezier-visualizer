@@ -423,4 +423,4 @@ function computeTextColor(bgColor) {
 	else if (final == 'white' && document.body.classList.contains('black')) document.body.classList.remove('black')
 	else document.body.classList.add(final)
 	return
-} // 420 lines of code. trust me, this is a coincidence.
+} 

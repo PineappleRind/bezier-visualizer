@@ -96,6 +96,30 @@
                 background color</button>
             <br>
             <hr>
+            <div>
+                <p>Choose a preset to load:</p>
+                
+                <select id="presetSelectChoice">
+                    <option>Loading presets...</option>
+                </select>
+                <br>
+                <p>This is the preset editor! You can open this to create, edit, and delete your curve presets.</p>
+            <button onclick="presetEditorPage(0)">Open Preset Editor...</button>
+            </div>
+        
+            <br>
+            <hr>
+            <div construction>
+                <h2 style="font-weight:200;font-size:25px;">data storage</h2>
+                <p>In this section there are a few tools you can use to save your curves as presets.</p>
+                <br>
+                <p>This is your data. It stores your current curve and your presets.</p>
+                <textarea id="saveDataTextarea"></textarea>
+                <p>To load save data, paste your save data into the box above and click the Load Save Data button.</p>
+                <button>Load Save Data</button>
+            </div>
+            <br><br>
+            <hr>
             <a href="https://github.com/PineappleRind/bezier-visualizer/issues"><button>Report bugs or give
                     feedback</button></a>
             <br>
@@ -111,7 +135,9 @@
     <p id="speedometer"
         style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">
     </p>
-    <script src="js/index.js"></script>
+    <script src="js/index.dev.js"></script>
+    <script src="js/presetEditor.js"></script>
+    <script>document.getElementById('presetSelectChoice').innerHTML = getPresetSelectHTML()</script>
     <script>
 
     </script>
