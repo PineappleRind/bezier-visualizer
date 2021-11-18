@@ -39,7 +39,7 @@
         <div id="minimize" onclick="this.parentElement.classList.toggle('hidden')">&times;</div>
         <div class="inner">
             <h1>Bezier Curve Visualizer</h1>
-            <h2 style="font-weight:200;font-size:25px;">how to use</h2>
+            <h2 >how to use</h2>
             <p>You can:
             <ul>
                 <li>
@@ -53,7 +53,7 @@
                 </li>
             </ul>
             <hr>
-            <h2 style="font-weight:200;font-size:25px;">controls</h2>
+            <h2 >controls</h2>
             <button id="playBtn"
                 onclick="playing = !playing;if (t <= 0.01) clearTrail();evaluatePlaying()">Stop</button>
             <button onclick="replay()">Restart</button>
@@ -70,7 +70,7 @@
             </select>
             <hr>
             <div>
-                <h2 style="font-weight:200;font-size:25px;">view</h2>
+                <h2>view</h2>
                 <input checked type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
                 <input checked type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
                 <input checked type="checkbox" id="trail"><label for="trail">Show Trail</label><br>
@@ -97,6 +97,7 @@
             <br>
             <hr>
             <div>
+                <h2 beta>presets </h2>
                 <p>Choose a preset to load:</p>
                 
                 <select id="presetSelectChoice">
@@ -109,14 +110,15 @@
         
             <br>
             <hr>
-            <div construction>
-                <h2 style="font-weight:200;font-size:25px;">data storage</h2>
+            <div>
+                <h2 beta>data storage</h2>
                 <p>In this section there are a few tools you can use to save your curves as presets.</p>
                 <br>
                 <p>This is your data. It stores your current curve and your presets.</p>
+                <p>This is not cross-browser or cross-device. If you want to have your presets on a different browser/device, load the data below in the other browser/device.</p>
                 <textarea id="saveDataTextarea"></textarea>
                 <p>To load save data, paste your save data into the box above and click the Load Save Data button.</p>
-                <button>Load Save Data</button>
+                <button onclick="loadSaveData(this.previousElementSibling.previousElementSibling)">Load Save Data</button>
             </div>
             <br><br>
             <hr>
@@ -137,7 +139,7 @@
     </p>
     <script src="js/index.js"></script>
     <script src="js/presetEditor.js"></script>
-    <script>document.getElementById('presetSelectChoice').innerHTML = getPresetSelectHTML()</script>
+    <script>document.getElementById('presetSelectChoice').innerHTML = getPresetSelectHTML();document.getElementById('saveDataTextarea').innerHTML = localStorage.getItem('bezierSaveData')</script>
     <script>
 
     </script>

@@ -75,13 +75,13 @@ var points = {
 	}, {
 		name: "Cursive f",
 		data: [
-			[193, 313], 
-			[513, 246], 
-			[42, 42], 
-			[410, 6], 
-			[120, 586], 
-			[567, 521], 
-			[53, 339], 
+			[193, 313],
+			[513, 246],
+			[42, 42],
+			[410, 6],
+			[120, 586],
+			[567, 521],
+			[53, 339],
 			[332, 283]
 		]
 	}]
@@ -129,7 +129,7 @@ var settings = {
 	},
 	colorAlgorithm: window.goldenAngle
 }
-var psc = document.getElementById('presetSelectChoice')
+
 for (let i = 0; i < points.data.length; i++) {
 	colors.push(settings.colorAlgorithm(i))
 }
@@ -335,7 +335,7 @@ function removePointHandler(evt) {
 	var iter = 0
 	for (var i = 0; i < points.data.length; i++) {
 		if (intersectingPoints(x, y, i) === true && points.data.length <= 2) {
-			toast('You can\'t have less than 2 points!')
+			toast('You can\'t have less than 2 points', 'info')
 			break;
 		}
 		if (intersectingPoints(x, y, i) === true && points.data.length > 2) {
@@ -461,4 +461,26 @@ function computeTextColor(bgColor) {
 	else if (final == 'white' && document.body.classList.contains('black')) document.body.classList.remove('black')
 	else document.body.classList.add(final)
 	return
+}
+
+/**********************
+ * Saving Features
+ * Development from:
+ * Nov 16 - Nov 18
+ **********************/
+
+function loadSaveData(element) {
+	try {
+		var toSave = JSON.parse(element.value)
+	} catch (error) {
+		toast('Invalid data structure<br><small style="font-weight:200"> '+error+'</small>', 'error')
+		return
+	}
+
+	if (toSave.data.length <= 1) return toast('Invalid save code: no data','error','error')
+	for (let i = 0; i < toSave.data.length; i++) {
+		if (toSave.data[i].length != 2) return toast('Invalid save code <br><small style="font-weight:200">Data point '+(i+1)+' has invalid coordinates</small>','error')
+	}
+
+	toast('Successfully loaded save code','success')
 }
