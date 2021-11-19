@@ -481,6 +481,6 @@ function loadSaveData(element) {
 	for (let i = 0; i < toSave.data.length; i++) {
 		if (toSave.data[i].length != 2) return toast('Invalid save code <br><small style="font-weight:200">Data point '+(i+1)+' has invalid coordinates</small>','error')
 	}
-
+	points = toSave
 	toast('Successfully loaded save code','success')
 }
