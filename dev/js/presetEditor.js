@@ -4,7 +4,7 @@
  * Development from:
  * Nov 16 - Nov 18
  ************************/
-var psc = document.getElementById('presetSelectChoice')
+var psc = $('presetSelectChoice')
 var presetEditorPages = [`<div><h1>Preset list</h1>${getPresetListHTML()}<button onclick="addPreset()">Add Preset...</button></div>`,]
 
 function presetEditorPage(index) {
@@ -23,7 +23,7 @@ function showModal(index) {
     modal.classList.add("modal")
     modal.setAttribute('aria-modal', 'true')
     modal.innerHTML = `<p id="close" onclick="removeModal()">&times;</p>` + presetEditorPages[index]
-    let o = document.getElementById('modalOverlay')
+    let o = $('modalOverlay')
     o.appendChild(modal)
     o.classList.add('showing')
     setTimeout(function () {
@@ -48,8 +48,8 @@ function removeModal() {
 function getPresetListHTML() {
     let res = `<div id="presetChoice">
       `
-    for (let i = 0; i < points.presets.length; i++) {
-        res += `	<div class="preset"><h1>${points.presets[i].name}</h1><button onclick="removePreset(${i});toast('Preset ${points.presets[i].name} successfully deleted','success');this.parentElement.remove()">Delete</button><button onclick="editPresetData(${i})">Edit Data</button><button onclick="changePresetName(${i});">Rename</button></div>
+    for (let i = 0; i < saveData.presets.length; i++) {
+        res += `	<div class="preset"><h1>${saveData.presets[i].name}</h1><button onclick="removePreset(${i});toast('Preset ${saveData.presets[i].name} successfully deleted','success');this.parentElement.remove()">Delete</button><button onclick="editPresetData(${i})">Edit Data</button><button onclick="changePresetName(${i});">Rename</button></div>
           `
     }
     res += `
@@ -60,8 +60,10 @@ function getPresetListHTML() {
 function getPresetSelectHTML() {
     let res = `<select id="presetChoice">
       `
-    for (let i = 0; i < points.presets.length; i++) {
-        res += `<option value="${i}">${points.presets[i].name}</option>
+    for (let i = 0; i < saveData.presets.length; i++) {
+        selected = ''
+        if (saveData.presets[i].data == saveData.data) selected = 'selected'
+        res += `<option value="${i}" ${selected}>${saveData.presets[i].name}</option>
           `
     }
     res += `
@@ -70,7 +72,7 @@ function getPresetSelectHTML() {
 }
 
 function removePreset(index) {
-    points.presets.splice(index, 1);
+    saveData.presets.splice(index, 1);
     updatePresetPage()
     psc.innerHTML = getPresetSelectHTML()
 }
@@ -81,39 +83,23 @@ function updatePresetPage() {
 }
 function changePresetName(index) {
     let newName = prompt('New preset name:')
-    points.presets[index].name = newName
-    document.getElementById('presetChoice').remove()
+    saveData.presets[index].name = newName
+    $('presetChoice').remove()
     document.querySelector('.modal').innerHTML += getPresetListHTML()
     updatePresetPage()
     psc.innerHTML = getPresetSelectHTML()
 }
 
-function toast(content,type) {
-    let toaster = document.createElement('DIV')
-    toaster.classList.add('toast')
-    if (type) toaster.classList.add(type)
-    toaster.innerHTML = content
-    document.body.appendChild(toaster)
-    setTimeout(function () {
-        toaster.classList.add('showing')
-    })
-    setTimeout(function () {
-        toaster.classList.remove('showing')
-        setTimeout(function () {
-            toaster.remove()
-        }, 500)
-    }, 3000)
-}
 
 function editPresetData(index) {
-    presetEditorPages[1] = `<p id="close" onclick="removeModal()">&times;</p><div><h1>Editing data for ${points.presets[index].name}</h1><textarea style="width:200px; height:300px">${JSON.stringify(points.presets[index].data).replace(/\]\,/g, '],&#13;&#10;').replace(/\[\[/g, '[&#13;&#10;[').replace(/\]\]/g, ']&#13;&#10;]')}</textarea><button onclick="savePresetData(${index},this.previousElementSibling)">Save</button>`
+    presetEditorPages[1] = `<p id="close" onclick="removeModal()">&times;</p><div><h1>Editing data for ${saveData.presets[index].name}</h1><textarea style="width:200px; height:300px">${JSON.stringify(saveData.presets[index].data).replace(/\]\,/g, '],&#13;&#10;').replace(/\[\[/g, '[&#13;&#10;[').replace(/\]\]/g, ']&#13;&#10;]')}</textarea><button onclick="savePresetData(${index},this.previousElementSibling)">Save</button>`
     presetEditorPage(1)
     psc.innerHTML = getPresetSelectHTML()
 }
 
 function savePresetData(index, textarea) {
-    points.presets[index].data = JSON.parse(textarea.value.replace('&#13;&#10;', ''))
-    toast('Successfully edited preset ' + points.presets[index].name,'success')
+    saveData.presets[index].data = JSON.parse(textarea.value.replace('&#13;&#10;', ''))
+    toast('Successfully edited preset ' + saveData.presets[index].name, 'success')
 }
 
 function addPreset() {
@@ -130,37 +116,53 @@ function addPreset() {
   ]</textarea><br>
       <p style="width:300px">Each point's x & y coordinates is wrapped in brackets []. Example: [100, 130]. This will make a point at x 100 and y 130.</p>
       <br>
-      <button onclick="parseAndAddPreset(document.getElementById('presetName'),document.getElementById('presetData'))">Create preset</button>`
+      <button onclick="parseAndAddPreset($('presetName'),$('presetData'))">Create preset</button>`
     presetEditorPage(2)
 }
 
 function parseAndAddPreset(name, data) {
-    let newInd = points.presets.length
-    points.presets[newInd] = {}
-    points.presets[newInd].name = name.value
+    let newInd = saveData.presets.length
+    saveData.presets[newInd] = {}
+    saveData.presets[newInd].name = name.value
     try {
         var newData = JSON.parse(data.value)
     } catch (err) {
-        toast('Invalid data structure <br><small style="font-weight:200">'+error+'</small>','error')
+        toast('Invalid data structure <br><small style="font-weight:200">' + error + '</small>', 'error')
         return
     }
     if (newData.length < 2) {
-        toast('Please add more than 1 point','error')
+        toast('Please add more than 1 point', 'error')
         return
     }
     for (let i = 0; i < newData.length; i++) {
         if (newData[i].length != 2) {
-            toast('Point ' + (i + 1) + ' does not have proper coordinates.','error')
+            toast('Point ' + (i + 1) + ' does not have proper coordinates.', 'error')
         }
     }
-    points.presets[newInd].data = JSON.parse(data.value)
+    saveData.presets[newInd].data = JSON.parse(data.value)
     psc.innerHTML = getPresetSelectHTML()
-    toast('Added preset '+name.value+' successfully','success')
+    toast('Added preset ' + name.value + ' successfully', 'success')
     save.set()
     return presetEditorPage(0)
 }
 psc.oninput = () => {
-    let number = parseInt(psc.value)
-    points.data = points.presets[number].data
+    loadPreset(psc)
+}
+function loadPreset(number) {
+    number = parseInt(number.value)
+    let toupdate = saveData.presets[number]
+    saveData.data = toupdate.data
+    let newShow
+    if (toupdate.show === null) {
+        newShow = {
+            "lines": true,
+            "midpoints": true,
+            "trail": true,
+            "controlpoints": true,
+            "finalmidpoint": true
+        }
+    } else newShow = toupdate.show
+    saveData.settings.show = newShow
     replay()
+    save.set()
 }

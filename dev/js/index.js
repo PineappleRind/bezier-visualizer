@@ -1,3 +1,7 @@
+function $(id) {
+	return document.getElementById(id)
+}
+
 function lerp(start, end, amt) {
 	return Math.round(((1 - amt) * start + amt * end) * 100) / 100;
 }
@@ -10,10 +14,10 @@ function easeInOutExpo(x) {
 	return x === 0 ?
 		0 :
 		x === 1 ?
-			1 :
-			x < 0.5 ?
-				Math.pow(2, 20 * x - 10) / 2 :
-				(2 - Math.pow(2, -20 * x + 10)) / 2;
+		1 :
+		x < 0.5 ?
+		Math.pow(2, 20 * x - 10) / 2 :
+		(2 - Math.pow(2, -20 * x + 10)) / 2;
 }
 
 function easeInOutQuart(x) {
@@ -23,7 +27,6 @@ function easeInOutQuart(x) {
 function bounce(x) {
 	const n1 = 7.5625;
 	const d1 = 2.75;
-
 	if (x < 1 / d1) {
 		return n1 * x * x;
 	} else if (x < 2 / d1) {
@@ -38,15 +41,13 @@ function bounce(x) {
 function linear(x) {
 	return x;
 }
-
-var points = {
+var saveData = {
 	data: [
 		[331, 351],
 		[38, 351],
 		[331, 14],
 		[38, 14],
 	],
-
 	computed: [],
 	presets: [{
 		name: "Default",
@@ -55,7 +56,8 @@ var points = {
 			[250, 250],
 			[30, 30],
 			[250, 30]
-		]
+		],
+		show: null
 	}, {
 		name: "Bow",
 		data: [
@@ -72,6 +74,7 @@ var points = {
 			[54, 20],
 			[357, 324]
 		],
+		show: null
 	}, {
 		name: "Cursive f",
 		data: [
@@ -83,23 +86,96 @@ var points = {
 			[567, 521],
 			[53, 339],
 			[332, 283]
-		]
-	}]
+		],
+		show: null
+	}, {
+		name: "Infinity Warp",
+		data: [
+			[683, 396],
+			[592, 368],
+			[737, 382],
+			[799, 228],
+			[764, 49],
+			[639, 8],
+			[456, 144],
+			[260, 331],
+			[97, 398],
+			[9, 282],
+			[16, 91],
+			[118, 0],
+			[288, 93],
+			[486, 284],
+			[618, 384],
+			[775, 330],
+			[796, 142],
+			[719, 8],
+			[565, 50],
+			[370, 230],
+			[158, 393],
+			[48, 367],
+			[0, 198],
+			[50, 31],
+			[185, 19],
+			[373, 174],
+			[568, 353],
+			[722, 391],
+			[796, 254],
+			[774, 67],
+			[660, 2],
+			[483, 119],
+			[285, 310],
+			[115, 400],
+			[15, 306],
+			[10, 114],
+			[100, 2],
+			[263, 71],
+			[460, 259],
+			[642, 393],
+			[765, 349],
+			[799, 168],
+			[735, 17],
+			[589, 34],
+			[396, 204],
+			[205, 370],
+			[62, 380],
+			[1, 225],
+			[38, 46],
+			[163, 9]
+		],
+		show: {
+			"lines": false,
+			"midpoints": true,
+			"trail": false,
+			"controlpoints": false,
+			"finalmidpoint": false
+		}
+	}],
+	settings: {
+		speed: 0.002,
+		ease: 'easeInOutQuad',
+		show: {
+			lines: true,
+			midpoints: true,
+			trail: true,
+			controlpoints: true,
+			finalmidpoint: true
+		},
+		colorAlgorithm: 'goldenAngle'
+	}
 };
-
+let root = document.documentElement;
 var save = {
-	getData: function () {
+	getData: function() {
 		return JSON.parse(localStorage.getItem("bezierSaveData"));
 	},
-	set: function () {
-		return localStorage.setItem("bezierSaveData", JSON.stringify(points));
+	set: function() {
+		return localStorage.setItem("bezierSaveData", JSON.stringify(saveData));
 	},
 };
 if (!save.getData()) {
 	save.set();
 } else {
-	points.data = save.getData().data;
-	points.computed = save.getData().computed
+	saveData = save.getData()
 }
 
 function goldenAngle(number) {
@@ -112,46 +188,31 @@ function rainbow(number) {
 }
 
 function grayscale(number) {
-	let newnum = `hsl(0,0%,${number / points.data.length * 100}%)`
+	let newnum = `hsl(0,0%,${number / saveData.data.length * 100}%)`
 	console.log(newnum)
 	return newnum
 }
 var colors = []
-var settings = {
-	speed: 0.002,
-	ease: window.easeInOutQuad,
-	show: {
-		lines: true,
-		midpoints: true,
-		trail: true,
-		controlpoints: true,
-		finalmidpoint: true
-	},
-	colorAlgorithm: window.goldenAngle
-}
 
-for (let i = 0; i < points.data.length; i++) {
-	colors.push(settings.colorAlgorithm(i))
+for (let i = 0; i < saveData.data.length; i++) {
+	colors.push(window[saveData.settings.colorAlgorithm](i))
 }
-
-let iteration = points.data.length - 1;
+let iteration = saveData.data.length - 1;
 var playing = true;
-
 var canvas = {
-	element: document.getElementById("canvas"),
-	context: document.getElementById("canvas").getContext("2d"),
-	clear: function () {
+	element: $("canvas"),
+	context: $("canvas").getContext("2d"),
+	clear: function() {
 		canvas.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	},
 }
 var trail = {
-	element: document.getElementById("canvas2"),
-	context: document.getElementById("canvas2").getContext("2d"),
-	clear: function () {
+	element: $("canvas2"),
+	context: $("canvas2").getContext("2d"),
+	clear: function() {
 		trail.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	}
 }
-
 var t = 0,
 	colorIteration = 1
 
@@ -160,43 +221,43 @@ function addPoint(x, y) {
 	colors.push(rainbow(colorIteration))
 	if (!x) x = 0
 	if (!y) y = 0
-	points.data.push([x, y])
-	iteration = points.data.length - 1;
+	saveData.data.push([x, y])
+	iteration = saveData.data.length - 1;
 	initialPoints()
 	save.set()
 }
 
 function com(easedT) {
-	iteration = points.data.length - 1;
-	points.computed = []
-	for (let o = 0; o < iteration; o++) points.computed.push([])
+	iteration = saveData.data.length - 1;
+	saveData.computed = []
+	for (let o = 0; o < iteration; o++) saveData.computed.push([])
 	for (let i = 0; i < iteration; i++) {
 		for (let j = 0; j < iteration - i; j++) {
 			if (i === 0) {
-				points.computed[0].push(
+				saveData.computed[0].push(
 					[
 						lerp(
-							points.data[j][0],
-							points.data[j + 1][0],
+							saveData.data[j][0],
+							saveData.data[j + 1][0],
 							easedT
 						),
 						lerp(
-							points.data[j][1],
-							points.data[j + 1][1],
+							saveData.data[j][1],
+							saveData.data[j + 1][1],
 							easedT
 						),
 					]
 				);
 			} else if (i != 0 && j < iteration - i) {
-				points.computed[i].push(
+				saveData.computed[i].push(
 					[
 						lerp(
-							points.computed[i - 1][j][0],
-							points.computed[i - 1][j + 1][0],
+							saveData.computed[i - 1][j][0],
+							saveData.computed[i - 1][j + 1][0],
 							easedT
 						), lerp(
-							points.computed[i - 1][j][1],
-							points.computed[i - 1][j + 1][1],
+							saveData.computed[i - 1][j][1],
+							saveData.computed[i - 1][j + 1][1],
 							easedT
 						)
 					]
@@ -235,8 +296,8 @@ function line(startx, starty, finishx, finishy) {
 }
 
 function evaluatePlaying() {
-	if (playing === true) window.requestAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Stop");
-	else window.cancelAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Play")
+	if (playing === true) window.requestAnimationFrame(advance), ($("playBtn").innerHTML = "Stop");
+	else window.cancelAnimationFrame(advance), ($("playBtn").innerHTML = "Play")
 }
 window.requestAnimationFrame(advance)
 
@@ -245,16 +306,16 @@ function replay() {
 	canvas.clear()
 	trail.clear()
 	window.cancelAnimationFrame(advance)
-	window.requestAnimationFrame(advance), (document.getElementById("playBtn").innerHTML = "Stop");
+	window.requestAnimationFrame(advance), ($("playBtn").innerHTML = "Stop");
 	playing = true;
 }
 
 function advance() {
 	canvas.clear();
-	document.getElementById("speedometer").innerHTML =
-		"t=" + settings.ease(t).toFixed(2);
-	t += settings.speed;
-	easedT = settings.ease(t);
+	$("speedometer").innerHTML =
+		"t=" + window[saveData.settings.ease](t).toFixed(2);
+	t += saveData.settings.speed;
+	easedT = window[saveData.settings.ease](t);
 	com(easedT);
 	let final = drawMidPoints();
 	drawTrail(final[0], final[1])
@@ -264,7 +325,7 @@ function advance() {
 }
 
 function resetCurve() {
-	points = {
+	saveData = {
 		data: [
 			[331, 351],
 			[38, 351],
@@ -272,30 +333,28 @@ function resetCurve() {
 			[38, 14],
 		],
 		computed: [],
-		presets: points.presets
+		presets: saveData.presets
 	};
 	save.set();
 }
-
 var mouseIsDown = false;
 var dragging = -1,
 	draggingPoint = -1;
-onmousedown = function () {
+onmousedown = function() {
 	mouseIsDown = true;
 };
-ontouchstart = function () {
+ontouchstart = function() {
 	mouseIsDown = true;
 };
-
-onmouseup = function () {
+onmouseup = function() {
 	mouseIsDown = false;
 	dragging = -1;
 	draggingPoint = -1;
 };
-onmousemove = function (e) {
+onmousemove = function(e) {
 	pointHandler(e);
 };
-ontouchmove = function (e) {
+ontouchmove = function(e) {
 	pointHandler(e.touches[0]);
 };
 
@@ -307,7 +366,7 @@ function pointHandler(windowEvent) {
 			updatePoint(dragging);
 			return;
 		}
-		for (var i = 0; i < points.data.length; i++) {
+		for (var i = 0; i < saveData.data.length; i++) {
 			if (intersectingPoints(x, y, i) === true) {
 				if (dragging == -1) dragging = i
 				if (x < 0) break;
@@ -321,8 +380,8 @@ function pointHandler(windowEvent) {
 	}
 
 	function updatePoint(pointIndex) {
-		points.data[pointIndex][0] = x;
-		points.data[pointIndex][1] = y;
+		saveData.data[pointIndex][0] = x;
+		saveData.data[pointIndex][1] = y;
 		canvas.clear();
 		initialPoints();
 		save.set();
@@ -333,31 +392,29 @@ function removePointHandler(evt) {
 	var x = evt.clientX;
 	var y = evt.clientY;
 	var iter = 0
-	for (var i = 0; i < points.data.length; i++) {
-		if (intersectingPoints(x, y, i) === true && points.data.length <= 2) {
+	for (var i = 0; i < saveData.data.length; i++) {
+		if (intersectingPoints(x, y, i) === true && saveData.data.length <= 2) {
 			toast('You can\'t have less than 2 points', 'info')
 			break;
 		}
-		if (intersectingPoints(x, y, i) === true && points.data.length > 2) {
+		if (intersectingPoints(x, y, i) === true && saveData.data.length > 2) {
 			dragging = i
-			points.data = arrRemove(points.data, points.data[i])
+			saveData.data = arrRemove(saveData.data, saveData.data[i])
 			canvas.clear();
 			save.set();
-			iteration = points.data.length - 1
+			iteration = saveData.data.length - 1
 			initialPoints()
 			dragging = -1
 			break;
 		} else {
 			iter++
-
-			if (i == points.data.length - 1 && iter == points.data.length - 1) {
+			if (i == saveData.data.length - 1 && iter == saveData.data.length - 1) {
 				break
-			} else if (i == points.data.length - 1 && iter == points.data.length) {
+			} else if (i == saveData.data.length - 1 && iter == saveData.data.length) {
 				addPoint(x, y)
 				break
 			}
 		}
-
 	}
 }
 
@@ -368,84 +425,84 @@ function arrRemove(arr, value) {
 	}
 	return arr;
 }
-
 canvas.element.ondblclick = e => {
 	removePointHandler(e)
 }
 
 function intersectingPoints(x, y, i) {
-	return ((((x >= points.data[i][0] && x <= points.data[i][0] + 10) ||
-		(x <= points.data[i][0] && x >= points.data[i][0] - 10)) &&
-		((y >= points.data[i][1] && y <= points.data[i][1] + 10) ||
-			(y <= points.data[i][1] && y >= points.data[i][1] - 10))) ||
+	return ((((x >= saveData.data[i][0] && x <= saveData.data[i][0] + 10) ||
+				(x <= saveData.data[i][0] && x >= saveData.data[i][0] - 10)) &&
+			((y >= saveData.data[i][1] && y <= saveData.data[i][1] + 10) ||
+				(y <= saveData.data[i][1] && y >= saveData.data[i][1] - 10))) ||
 		dragging === i)
 }
 
 function initialPoints() {
-	if (settings.show.lines == true) {
-		for (var i = 0; i < points.data.length - 1; i++) {
+	if (saveData.settings.show.lines == true) {
+		for (var i = 0; i < saveData.data.length - 1; i++) {
 			line(
-				points.data[i][0],
-				points.data[i][1],
-				points.data[i + 1][0],
-				points.data[i + 1][1]
+				saveData.data[i][0],
+				saveData.data[i][1],
+				saveData.data[i + 1][0],
+				saveData.data[i + 1][1]
 			);
 		}
 	}
-	for (var i = 0; i < points.data.length; i++) {
-		if (settings.show.controlpoints === true) point(points.data[i][0], points.data[i][1], 10, colors[i]); // Anchor dots
+	for (var i = 0; i < saveData.data.length; i++) {
+		if (saveData.settings.show.controlpoints === true) point(saveData.data[i][0], saveData.data[i][1], 10, colors[i]); // Anchor dots
 	}
 }
 
 function drawMidPoints() {
-	for (let i = 0; i < points.computed.length; i++) {
-		for (let j = 0; j < points.computed[i].length; j++) {
+	for (let i = 0; i < saveData.computed.length; i++) {
+		for (let j = 0; j < saveData.computed[i].length; j++) {
 			let radius = 3
-			if (i === points.computed.length - 1 && settings.show.finalmidpoint === true) radius = 10
-			if (settings.show.midpoints == true || (radius == 10 && settings.show.finalmidpoint == true)) {
+			if (i === saveData.computed.length - 1 && saveData.settings.show.finalmidpoint === true) radius = 10
+			if (saveData.settings.show.midpoints == true || (radius == 10 && saveData.settings.show.finalmidpoint == true)) {
 				point(
-					points.computed[i][j][0],
-					points.computed[i][j][1],
+					saveData.computed[i][j][0],
+					saveData.computed[i][j][1],
 					radius
 				)
 			}
-			if (settings.show.lines == true) {
+			if (saveData.settings.show.lines == true) {
 				if (j > 0) line(
-					points.computed[i][j][0], points.computed[i][j][1],
-					points.computed[i][j - 1][0], points.computed[i][j - 1][1]
+					saveData.computed[i][j][0], saveData.computed[i][j][1],
+					saveData.computed[i][j - 1][0], saveData.computed[i][j - 1][1]
 				)
 			}
-			if (i === points.computed.length - 1) return [points.computed[i][j][0],
-			points.computed[i][j][1]
+			if (i === saveData.computed.length - 1) return [saveData.computed[i][j][0],
+				saveData.computed[i][j][1]
 			]
 		}
 	}
 }
 
 function drawTrail(x, y) {
-	if (settings.show.trail == false) return
+	if (saveData.settings.show.trail == false) return
 	trail.context.beginPath();
 	trail.context.fillStyle = '#ffffff';
 	trail.context.arc(x, y, 10, 0, 2 * Math.PI, true);
 	trail.context.closePath();
 	trail.context.fill();
 }
-
-document.getElementById("easeOption").oninput = function () {
-	settings.ease = window[document.getElementById("easeOption").value];
+$("easeOption").oninput = function() {
+	saveData.settings.ease = $("easeOption").value;
+	save.set()
 };
-
-document.getElementById("colorOption").oninput = function () {
-	settings.colorAlgorithm = window[document.getElementById("colorOption").value];
+$("colorOption").oninput = function() {
+	window[saveData.settings.colorAlgorithm] = window[$("colorOption").value];
 	colors = []
-	for (let i = 0; i < points.data.length; i++) {
-		colors.push(settings.colorAlgorithm(i))
+	for (let i = 0; i < saveData.data.length; i++) {
+		colors.push(window[saveData.settings.colorAlgorithm](i))
 	}
+	save.set()
 };
 oninput = e => {
 	let target = e.target
 	let toChange = target.getAttribute('id')
-	settings.show[toChange] = !settings.show[toChange]
+	saveData.settings.show[toChange] = !saveData.settings.show[toChange]
+	save.set()
 }
 
 function computeTextColor(bgColor) {
@@ -462,25 +519,22 @@ function computeTextColor(bgColor) {
 	else document.body.classList.add(final)
 	return
 }
-
 /**********************
  * Saving Features
  * Development from:
  * Nov 16 - Nov 18
  **********************/
-
 function loadSaveData(element) {
 	try {
 		var toSave = JSON.parse(element.value)
 	} catch (error) {
-		toast('Invalid data structure<br><small style="font-weight:200"> '+error+'</small>', 'error')
+		toast('Invalid data structure<br><small style="font-weight:200"> ' + error + '</small>', 'error')
 		return
 	}
-
-	if (toSave.data.length <= 1) return toast('Invalid save code: no data','error','error')
+	if (toSave.data.length <= 1) return toast('Invalid save code: no data', 'error', 'error')
 	for (let i = 0; i < toSave.data.length; i++) {
-		if (toSave.data[i].length != 2) return toast('Invalid save code <br><small style="font-weight:200">Data point '+(i+1)+' has invalid coordinates</small>','error')
+		if (toSave.data[i].length != 2) return toast('Invalid save code <br><small style="font-weight:200">Data point ' + (i + 1) + ' has invalid coordinates</small>', 'error')
 	}
-	points = toSave
-	toast('Successfully loaded save code','success')
+	saveData = toSave
+	toast('Successfully loaded save code', 'success')
 }

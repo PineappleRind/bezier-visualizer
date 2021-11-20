@@ -88,14 +88,6 @@
                 </select>
             </div>
             <hr>
-            <p>Background color</p>
-            <input type="color" id="bgColorPicker"
-                oninput="document.body.style.backgroundColor = this.value; computeTextColor(this);"><br><br>
-            <button
-                onclick="document.body.style.backgroundColor = '#000020';this.previousElementSibling.value = '000020';computeTextColor(this)">Reset
-                background color</button>
-            <br>
-            <hr>
             <div>
                 <h2 beta>presets </h2>
                 <p>Choose a preset to load:</p>
@@ -116,7 +108,7 @@
                 <br>
                 <p>This is your data. It stores your current curve and your presets.</p>
                 <p>This is not cross-browser or cross-device. If you want to have your presets on a different browser/device, load the data below in the other browser/device.</p>
-                <textarea id="saveDataTextarea"></textarea>
+                <textarea style="height: 100px;width:100%;" id="saveDataTextarea"></textarea>
                 <p>To load save data, paste your save data into the box above and click the Load Save Data button.</p>
                 <button onclick="loadSaveData(this.previousElementSibling.previousElementSibling)">Load Save Data</button>
             </div>
@@ -139,10 +131,12 @@
     </p>
     <script src="js/index.js"></script>
     <script src="js/presetEditor.js"></script>
-    <script>document.getElementById('presetSelectChoice').innerHTML = getPresetSelectHTML();document.getElementById('saveDataTextarea').innerHTML = localStorage.getItem('bezierSaveData')</script>
+    <script></script>
     <script>
-
+        onerror = e => {
+        console.log(JSON.stringify(e))
+        }
     </script>
-</body>
+    </body>
 
 </html>

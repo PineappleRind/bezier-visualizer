@@ -12,15 +12,6 @@ body {
     --border: 1px solid rgba(151, 158, 255, 0.3);
 }
 
-body.black * {
-    color: black;
-
-}
-
-body.black {
-    --background-color: rgba(0, 0, 0, 0.1);
-    --border: 1px solid rgba(0, 0, 0, 0.3);
-}
 
 html,
 body {
@@ -38,6 +29,16 @@ body {
     justify-content: center;
 }
 
+::-webkit-scrollbar {
+    background: var(--background-color);
+}
+::-webkit-scrollbar-thumb {
+    border-radius:100px; 
+    background: var(--background-color-hover)
+}
+::-webkit-scrollbar-thumb:hover {
+   background:rgba(0, 72, 255, 0.705)
+}
 canvas {
     position: absolute;
     top: 0;
@@ -57,19 +58,21 @@ canvas {
     position: fixed;
     right: 0;
     width: calc(225px + 20%);
-    height: 100%;
     z-index: 9;
-    border-radius: 20px 0 0px 20px;
+    height:calc(100% - 20px);
+    margin: 10px;
+    border-radius: 20px;
     transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     border: var(--border);
     border-right: 0;
+    overflow:hidden;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 
     .inner {
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 100vh;
+        height: 100%;
         transition: 0.5s cubic-bezier(.04, .91, .54, .99);
         padding: 30px;
     }
@@ -77,7 +80,7 @@ canvas {
     #minimize {
         transition: 0.5s;
         position: absolute;
-        left: -30px;
+        left: 10px;
         text-shadow: 0 0 10px black;
         top: 10px;
         padding: 2px;
@@ -98,9 +101,11 @@ canvas {
 
     &.hidden {
         transform: translateX(100%);
+        overflow:visible;
     }
 
     &.hidden #minimize {
+        left: -30px;
         transform: rotate(495deg);
     }
 }
