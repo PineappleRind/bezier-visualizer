@@ -14,10 +14,10 @@ function easeInOutExpo(x) {
 	return x === 0 ?
 		0 :
 		x === 1 ?
-		1 :
-		x < 0.5 ?
-		Math.pow(2, 20 * x - 10) / 2 :
-		(2 - Math.pow(2, -20 * x + 10)) / 2;
+			1 :
+			x < 0.5 ?
+				Math.pow(2, 20 * x - 10) / 2 :
+				(2 - Math.pow(2, -20 * x + 10)) / 2;
 }
 
 function easeInOutQuart(x) {
@@ -165,10 +165,11 @@ var saveData = {
 };
 let root = document.documentElement;
 var save = {
-	getData: function() {
+	getData: function () {
 		return JSON.parse(localStorage.getItem("bezierSaveData"));
 	},
-	set: function() {
+	set: function () {
+		showSaveData()
 		return localStorage.setItem("bezierSaveData", JSON.stringify(saveData));
 	},
 };
@@ -177,7 +178,11 @@ if (!save.getData()) {
 } else {
 	saveData = save.getData()
 }
-
+let colorAlgorithms = [
+	'goldenAngle',
+	'rainbow',
+	'grayscale'
+]
 function goldenAngle(number) {
 	const hue = number * 137.50776405; // use golden angle approximation
 	return `hsl(${hue},100%,50%)`;
@@ -197,19 +202,35 @@ var colors = []
 for (let i = 0; i < saveData.data.length; i++) {
 	colors.push(window[saveData.settings.colorAlgorithm](i))
 }
-let iteration = saveData.data.length - 1;
+function toast(msg,theme) {
+	let toast=document.createElement('DIV')
+	toast.classList.add('toast')
+	toast.innerHTML = msg
+	toast.classList.add(theme)
+	setTimeout(function(){
+		toast.classList.add('showing')
+		setTimeout(function(){
+			toast.classList.remove('showing')
+			setTimeout(function(){
+				toast.remove()
+			},500)
+		},3000)
+	})
+	document.body.appendChild(toast)
+}
+let iterationCount = saveData.data.length - 1;
 var playing = true;
 var canvas = {
 	element: $("canvas"),
 	context: $("canvas").getContext("2d"),
-	clear: function() {
+	clear: function () {
 		canvas.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	},
 }
 var trail = {
 	element: $("canvas2"),
 	context: $("canvas2").getContext("2d"),
-	clear: function() {
+	clear: function () {
 		trail.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	}
 }
@@ -222,42 +243,42 @@ function addPoint(x, y) {
 	if (!x) x = 0
 	if (!y) y = 0
 	saveData.data.push([x, y])
-	iteration = saveData.data.length - 1;
+	iterationCount = saveData.data.length - 1;
 	initialPoints()
 	save.set()
 }
 
 function com(easedT) {
-	iteration = saveData.data.length - 1;
-	saveData.computed = []
-	for (let o = 0; o < iteration; o++) saveData.computed.push([])
-	for (let i = 0; i < iteration; i++) {
-		for (let j = 0; j < iteration - i; j++) {
-			if (i === 0) {
-				saveData.computed[0].push(
-					[
-						lerp(
-							saveData.data[j][0],
-							saveData.data[j + 1][0],
+	/*This function computes all midpoints for the specified t-value. */
+	iterationCount = saveData.data.length - 1;
+	saveData.computed = [] // Reset computed midpoints
+	for (let o = 0; o < iterationCount; o++) saveData.computed.push([])
+	for (let iNumber = 0; iNumber < iterationCount; iNumber++) { // For each iteration of midpoints:
+		for (let point = 0; point < iterationCount - iNumber; point++) {//For each point in the iteration of midpoints:
+			if (iNumber === 0) { // If it's the first iteration
+				saveData.computed[0].push( // Push the linearly interpolated values of the control points to the result
+						[lerp(
+							saveData.data[point][0],
+							saveData.data[point + 1][0],
 							easedT
-						),
-						lerp(
-							saveData.data[j][1],
-							saveData.data[j + 1][1],
+						), lerp(
+							saveData.data[point][1],
+							saveData.data[point + 1][1],
 							easedT
 						),
 					]
 				);
-			} else if (i != 0 && j < iteration - i) {
-				saveData.computed[i].push(
+			} else if (iNumber != 0 && point < iterationCount - iNumber) {
+				// If it's not the first iteration
+				saveData.computed[iNumber].push( // Push the linearly interpolated values of the previous linearly interpolated values (creating a linearly interpolated median)
 					[
 						lerp(
-							saveData.computed[i - 1][j][0],
-							saveData.computed[i - 1][j + 1][0],
+							saveData.computed[iNumber - 1][point][0],
+							saveData.computed[iNumber - 1][point + 1][0],
 							easedT
 						), lerp(
-							saveData.computed[i - 1][j][1],
-							saveData.computed[i - 1][j + 1][1],
+							saveData.computed[iNumber - 1][point][1],
+							saveData.computed[iNumber - 1][point + 1][1],
 							easedT
 						)
 					]
@@ -299,15 +320,16 @@ function evaluatePlaying() {
 	if (playing === true) window.requestAnimationFrame(advance), ($("playBtn").innerHTML = "Stop");
 	else window.cancelAnimationFrame(advance), ($("playBtn").innerHTML = "Play")
 }
-window.requestAnimationFrame(advance)
-
+evaluatePlaying()
+updateCheckboxes()
 function replay() {
+	if (playing === true) window.cancelAnimationFrame(advance)
+	else window.requestAnimationFrame(advance)
 	t = 0;
 	canvas.clear()
 	trail.clear()
-	window.cancelAnimationFrame(advance)
-	window.requestAnimationFrame(advance), ($("playBtn").innerHTML = "Stop");
 	playing = true;
+	initialPoints()
 }
 
 function advance() {
@@ -319,9 +341,10 @@ function advance() {
 	com(easedT);
 	let final = drawMidPoints();
 	drawTrail(final[0], final[1])
+	window.cancelAnimationFrame(advance)
 	initialPoints();
-	if (t >= 1 || playing === false) window.cancelAnimationFrame(advance);
-	else window.requestAnimationFrame(advance);
+	if (t >= 1 || playing === false) window.cancelAnimationFrame(advance),playing = false;
+	else window.requestAnimationFrame(advance)
 }
 
 function resetCurve() {
@@ -340,21 +363,21 @@ function resetCurve() {
 var mouseIsDown = false;
 var dragging = -1,
 	draggingPoint = -1;
-onmousedown = function() {
+onmousedown = function () {
 	mouseIsDown = true;
 };
-ontouchstart = function() {
+ontouchstart = function () {
 	mouseIsDown = true;
 };
-onmouseup = function() {
+onmouseup = function () {
 	mouseIsDown = false;
 	dragging = -1;
 	draggingPoint = -1;
 };
-onmousemove = function(e) {
+onmousemove = function (e) {
 	pointHandler(e);
 };
-ontouchmove = function(e) {
+ontouchmove = function (e) {
 	pointHandler(e.touches[0]);
 };
 
@@ -402,7 +425,7 @@ function removePointHandler(evt) {
 			saveData.data = arrRemove(saveData.data, saveData.data[i])
 			canvas.clear();
 			save.set();
-			iteration = saveData.data.length - 1
+			iterationCount = saveData.data.length - 1
 			initialPoints()
 			dragging = -1
 			break;
@@ -431,9 +454,9 @@ canvas.element.ondblclick = e => {
 
 function intersectingPoints(x, y, i) {
 	return ((((x >= saveData.data[i][0] && x <= saveData.data[i][0] + 10) ||
-				(x <= saveData.data[i][0] && x >= saveData.data[i][0] - 10)) &&
-			((y >= saveData.data[i][1] && y <= saveData.data[i][1] + 10) ||
-				(y <= saveData.data[i][1] && y >= saveData.data[i][1] - 10))) ||
+		(x <= saveData.data[i][0] && x >= saveData.data[i][0] - 10)) &&
+		((y >= saveData.data[i][1] && y <= saveData.data[i][1] + 10) ||
+			(y <= saveData.data[i][1] && y >= saveData.data[i][1] - 10))) ||
 		dragging === i)
 }
 
@@ -472,7 +495,7 @@ function drawMidPoints() {
 				)
 			}
 			if (i === saveData.computed.length - 1) return [saveData.computed[i][j][0],
-				saveData.computed[i][j][1]
+			saveData.computed[i][j][1]
 			]
 		}
 	}
@@ -486,12 +509,12 @@ function drawTrail(x, y) {
 	trail.context.closePath();
 	trail.context.fill();
 }
-$("easeOption").oninput = function() {
+$("easeOption").oninput = function () {
 	saveData.settings.ease = $("easeOption").value;
 	save.set()
 };
-$("colorOption").oninput = function() {
-	window[saveData.settings.colorAlgorithm] = window[$("colorOption").value];
+$("colorOption").oninput = function () {
+	saveData.settings.colorAlgorithm = $("colorOption").value;
 	colors = []
 	for (let i = 0; i < saveData.data.length; i++) {
 		colors.push(window[saveData.settings.colorAlgorithm](i))
@@ -519,11 +542,42 @@ function computeTextColor(bgColor) {
 	else document.body.classList.add(final)
 	return
 }
+
+function updateCheckboxes() {
+	for (let i = 0; i < document.querySelectorAll('.showCheckbox').length; i++) {
+		let cur = document.querySelectorAll('.showCheckbox')[i]
+		console.log(cur)
+		let objKey = saveData.settings.show[Object.keys(saveData.settings.show)[i]]
+		console.log(Object.keys(saveData.settings.show)[i])
+		if (objKey === true) cur.checked = true 
+		else cur.checked = false
+	}
+}
+
+function getColorSelectHTML() {
+    let res = `<select id="colorOption">
+      `
+    for (let i = 0; i < colorAlgorithms.length; i++) {
+        selected = ''
+        if (saveData.settings.colorAlgorithm[i] === colorAlgorithms[i]) selected = 'selected'
+        res += `<option value="${colorAlgorithms[i]}" name="${colorAlgorithms[i]}" ${selected}>${colorAlgorithms[i]}</option>
+          `
+    }
+    res += `
+      </select>`
+      console.log(res)
+    return res
+}
+$('colorOptionWrapper').innerHTML = getColorSelectHTML()
 /**********************
  * Saving Features
  * Development from:
  * Nov 16 - Nov 18
  **********************/
+function showSaveData() {
+	let ta = $('saveDataTextarea')
+	ta.value = JSON.stringify(saveData)
+}
 function loadSaveData(element) {
 	try {
 		var toSave = JSON.parse(element.value)
@@ -531,6 +585,7 @@ function loadSaveData(element) {
 		toast('Invalid data structure<br><small style="font-weight:200"> ' + error + '</small>', 'error')
 		return
 	}
+
 	if (toSave.data.length <= 1) return toast('Invalid save code: no data', 'error', 'error')
 	for (let i = 0; i < toSave.data.length; i++) {
 		if (toSave.data[i].length != 2) return toast('Invalid save code <br><small style="font-weight:200">Data point ' + (i + 1) + ' has invalid coordinates</small>', 'error')
@@ -538,3 +593,5 @@ function loadSaveData(element) {
 	saveData = toSave
 	toast('Successfully loaded save code', 'success')
 }
+
+showSaveData()

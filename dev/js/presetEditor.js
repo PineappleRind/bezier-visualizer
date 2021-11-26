@@ -146,10 +146,10 @@ function parseAndAddPreset(name, data) {
     return presetEditorPage(0)
 }
 psc.oninput = () => {
-    loadPreset(psc)
+    loadPreset(parseInt(psc.value))
+    save.set()
 }
 function loadPreset(number) {
-    number = parseInt(number.value)
     let toupdate = saveData.presets[number]
     saveData.data = toupdate.data
     let newShow
@@ -165,4 +165,6 @@ function loadPreset(number) {
     saveData.settings.show = newShow
     replay()
     save.set()
+    updateCheckboxes()
 }
+$('presetSelectChoice').innerHTML = getPresetSelectHTML()

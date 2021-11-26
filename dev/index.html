@@ -55,7 +55,7 @@
             <hr>
             <h2 >controls</h2>
             <button id="playBtn"
-                onclick="playing = !playing;if (t <= 0.01) clearTrail();evaluatePlaying()">Stop</button>
+                onclick="playing = !playing;if (t <= 0.01) trail.clear();evaluatePlaying()">Stop</button>
             <button onclick="replay()">Restart</button>
             <button onclick="resetCurve()">Reset Curve</button>
             <br>
@@ -68,24 +68,31 @@
                 <option>easeInOutExpo</option>
                 <option>bounce</option>
             </select>
+            <br>
+            <p>Animation speed</p><br>
+            <input oninput="saveData.settings.speed = this.value / 1000"type="range" min="0.5" max="20">
             <hr>
             <div>
                 <h2>view</h2>
-                <input checked type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
-                <input checked type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
-                <input checked type="checkbox" id="trail"><label for="trail">Show Trail</label><br>
-                <input checked type="checkbox" id="controlpoints"><label for="controlpoints">Show Control
-                    Points</label><br>
-                <input checked type="checkbox" id="finalmidpoint"><label for="finalmidpoint">Show final midpoint (large
-                    white dot)</label>
+                <div id="showCheckboxes">
+                    <input class="showCheckbox" checked type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="trail"><label for="trail">Show Trail</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="controlpoints"><label for="controlpoints">Show Control
+                        Points</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="finalmidpoint"><label for="finalmidpoint">Show final midpoint (large
+                        white dot)</label>
+                </div>
             </div>
             <div>
                 <p>Control point color scheme</p>
-                <select id="colorOption">
-                    <option selected name="goldenAngle">goldenAngle</option>
-                    <option name="rainbow">rainbow</option>
-                    <option name="grayscale">grayscale</option>
-                </select>
+                <div id="colorOptionWrapper">
+                    <select id="colorOption">
+                        <option selected name="goldenAngle">goldenAngle</option>
+                        <option name="rainbow">rainbow</option>
+                        <option name="grayscale">grayscale</option>
+                    </select>
+                </div>
             </div>
             <hr>
             <div>
@@ -104,7 +111,7 @@
             <hr>
             <div>
                 <h2 beta>data storage</h2>
-                <p>In this section there are a few tools you can use to save your curves as presets.</p>
+                <p>In this section there are a few tools you can use for data storage and management.</p>
                 <br>
                 <p>This is your data. It stores your current curve and your presets.</p>
                 <p>This is not cross-browser or cross-device. If you want to have your presets on a different browser/device, load the data below in the other browser/device.</p>

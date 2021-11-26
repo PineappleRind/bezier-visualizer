@@ -59,9 +59,9 @@ canvas {
     right: 0;
     width: calc(225px + 20%);
     z-index: 9;
-    height:calc(100% - 20px);
-    margin: 10px;
-    border-radius: 20px;
+    height:100%;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
     transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     border: var(--border);
     border-right: 0;
@@ -259,7 +259,7 @@ form p#close:hover {
     position: relative;
     opacity: 0;
     border-radius: 20px;
-    background: rgba(255, 255, 255, .1);
+    background: var(--background-color);
     border: var(--border);
 }
 
