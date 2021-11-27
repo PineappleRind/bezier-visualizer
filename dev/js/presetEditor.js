@@ -114,16 +114,25 @@ function addPreset() {
       [0, 0],
       [0, 0]
   ]</textarea><br>
+        <p>View options:</p>
+        <div id="presetViewOptions">
+            <input type="checkbox" id="plines" checked><label for="ppoints">Show lines</label>
+            <input type="checkbox" id="pmidpoints" checked><label for="pmidpoints">Show midpoints</label>
+            <input type="checkbox" id="ptrail" checked><label for="ptrail">Show trail</label>
+            <input type="checkbox" id="pcontrolpoints" checked><label for="pcontrolpoints">Show control points</label>
+            <input type="checkbox" id="pfinalmidpoints" checked><label for="pfinalmidpoints">Show final midpoints</label>
+        </div>
       <p style="width:300px">Each point's x & y coordinates is wrapped in brackets []. Example: [100, 130]. This will make a point at x 100 and y 130.</p>
       <br>
-      <button onclick="parseAndAddPreset($('presetName'),$('presetData'))">Create preset</button>`
+      <button onclick="parseAndAddPreset($('presetName'),$('presetData'),$('presetViewOptions'))">Create preset</button>`
     presetEditorPage(2)
 }
 
-function parseAndAddPreset(name, data) {
+function parseAndAddPreset(name, data, viewOpts) {
     let newInd = saveData.presets.length
     saveData.presets[newInd] = {}
     saveData.presets[newInd].name = name.value
+    saveData.presets[newInd].show = []
     try {
         var newData = JSON.parse(data.value)
     } catch (err) {
@@ -138,6 +147,11 @@ function parseAndAddPreset(name, data) {
         if (newData[i].length != 2) {
             toast('Point ' + (i + 1) + ' does not have proper coordinates.', 'error')
         }
+    }
+    for (let i = 0; i < viewOpts.children.length; i++) {
+        if (viewOpts.children[i].checked) {
+            saveData.presets[newInd].show[i] = true
+        } else saveData.presets[newInd].show[i] = false
     }
     saveData.presets[newInd].data = JSON.parse(data.value)
     psc.innerHTML = getPresetSelectHTML()

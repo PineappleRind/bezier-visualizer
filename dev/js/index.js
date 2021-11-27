@@ -48,7 +48,6 @@ var saveData = {
 		[331, 14],
 		[38, 14],
 	],
-	computed: [],
 	presets: [{
 		name: "Default",
 		data: [
@@ -90,57 +89,12 @@ var saveData = {
 		show: null
 	}, {
 		name: "Infinity Warp",
+		data: [[683,396],[592,368],[737,382],[799,228],[764,49],[639,8],[456,144],[260,331],[97,398],[9,282],[16,91],[118,0],[288,93],[486,284],[618,384],[775,330],[796,142],[719,8],[565,50],[370,230],[158,393],[48,367],[0,198],[50,31],[185,19],[373,174],[568,353],[722,391],[796,254],[774,67],[660,2],[483,119],[285,310],[115,400],[15,306],[10,114],[100,2],[263,71],[460,259],[642,393],[765,349],[799,168],[735,17],[589,34],[396,204],[205,370],[62,380],[1,225],[38,46],[163,9]],
+	},
+	{
+		name: "Circle Warp",
 		data: [
-			[683, 396],
-			[592, 368],
-			[737, 382],
-			[799, 228],
-			[764, 49],
-			[639, 8],
-			[456, 144],
-			[260, 331],
-			[97, 398],
-			[9, 282],
-			[16, 91],
-			[118, 0],
-			[288, 93],
-			[486, 284],
-			[618, 384],
-			[775, 330],
-			[796, 142],
-			[719, 8],
-			[565, 50],
-			[370, 230],
-			[158, 393],
-			[48, 367],
-			[0, 198],
-			[50, 31],
-			[185, 19],
-			[373, 174],
-			[568, 353],
-			[722, 391],
-			[796, 254],
-			[774, 67],
-			[660, 2],
-			[483, 119],
-			[285, 310],
-			[115, 400],
-			[15, 306],
-			[10, 114],
-			[100, 2],
-			[263, 71],
-			[460, 259],
-			[642, 393],
-			[765, 349],
-			[799, 168],
-			[735, 17],
-			[589, 34],
-			[396, 204],
-			[205, 370],
-			[62, 380],
-			[1, 225],
-			[38, 46],
-			[163, 9]
+			[300, 600], [552, 462], [573, 175], [342, 3], [73, 104], [12, 385], [216, 588], [495, 528], [597, 256], [424, 27], [137, 48], [0, 301], [139, 553], [426, 572], [597, 341], [495, 72], [214, 13], [12, 217], [75, 498], [345, 597], [574, 422], [551, 136], [297, 0], [46, 140], [28, 427], [260, 597], [529, 494], [587, 212], [381, 11], [101, 76], [4, 346], [179, 574], [465, 550], [600, 296], [459, 45], [172, 29], [2, 262], [107, 530], [389, 587], [589, 380], [524, 100], [252, 4], [25, 180], [50, 467], [305, 600], [555, 458], [571, 170], [337, 2], [70, 108], [14, 390], [221, 589], [501, 523], [596, 251], [419, 25], [132, 51], [0, 307], [144, 556], [431, 570], [598, 336], [491, 69], [209, 14], [10, 223], [78, 502], [350, 596], [576, 418], [548, 131], [292, 0], [43, 145], [31, 432], [266, 598], [532, 490], [585, 207], [376, 10], [97, 79], [4, 352], [184, 577], [470, 547], [600, 291], [454, 43], [167, 31], [2, 267], [111, 533], [394, 585], [591, 375], [520, 96], [247, 5], [23, 185], [53, 471], [311, 600], [558, 453], [568, 166], [332, 2], [66, 112], [16, 395], [226, 591], [505, 519], [595, 246], [414, 22], [128, 54], [0, 312]
 		],
 		show: {
 			"lines": false,
@@ -150,6 +104,13 @@ var saveData = {
 			"finalmidpoint": false
 		}
 	}],
+	show: {
+		"lines": false,
+		"midpoints": true,
+		"trail": false,
+		"controlpoints": false,
+		"finalmidpoint": false
+	},
 	settings: {
 		speed: 0.002,
 		ease: 'easeInOutQuad',
@@ -163,6 +124,7 @@ var saveData = {
 		colorAlgorithm: 'goldenAngle'
 	}
 };
+let computed =  []
 let root = document.documentElement;
 var save = {
 	getData: function () {
@@ -202,19 +164,19 @@ var colors = []
 for (let i = 0; i < saveData.data.length; i++) {
 	colors.push(window[saveData.settings.colorAlgorithm](i))
 }
-function toast(msg,theme) {
-	let toast=document.createElement('DIV')
+function toast(msg, theme) {
+	let toast = document.createElement('DIV')
 	toast.classList.add('toast')
 	toast.innerHTML = msg
 	toast.classList.add(theme)
-	setTimeout(function(){
+	setTimeout(function () {
 		toast.classList.add('showing')
-		setTimeout(function(){
+		setTimeout(function () {
 			toast.classList.remove('showing')
-			setTimeout(function(){
+			setTimeout(function () {
 				toast.remove()
-			},500)
-		},3000)
+			}, 500)
+		}, 3000)
 	})
 	document.body.appendChild(toast)
 }
@@ -251,34 +213,34 @@ function addPoint(x, y) {
 function com(easedT) {
 	/*This function computes all midpoints for the specified t-value. */
 	iterationCount = saveData.data.length - 1;
-	saveData.computed = [] // Reset computed midpoints
-	for (let o = 0; o < iterationCount; o++) saveData.computed.push([])
+	computed = [] // Reset computed midpoints
+	for (let o = 0; o < iterationCount; o++) computed.push([])
 	for (let iNumber = 0; iNumber < iterationCount; iNumber++) { // For each iteration of midpoints:
 		for (let point = 0; point < iterationCount - iNumber; point++) {//For each point in the iteration of midpoints:
 			if (iNumber === 0) { // If it's the first iteration
-				saveData.computed[0].push( // Push the linearly interpolated values of the control points to the result
-						[lerp(
-							saveData.data[point][0],
-							saveData.data[point + 1][0],
-							easedT
-						), lerp(
-							saveData.data[point][1],
-							saveData.data[point + 1][1],
-							easedT
-						),
+				computed[0].push( // Push the linearly interpolated values of the control points to the result
+					[lerp(
+						saveData.data[point][0],
+						saveData.data[point + 1][0],
+						easedT
+					), lerp(
+						saveData.data[point][1],
+						saveData.data[point + 1][1],
+						easedT
+					),
 					]
 				);
 			} else if (iNumber != 0 && point < iterationCount - iNumber) {
 				// If it's not the first iteration
-				saveData.computed[iNumber].push( // Push the linearly interpolated values of the previous linearly interpolated values (creating a linearly interpolated median)
+				computed[iNumber].push( // Push the linearly interpolated values of the previous linearly interpolated values (creating a linearly interpolated median)
 					[
 						lerp(
-							saveData.computed[iNumber - 1][point][0],
-							saveData.computed[iNumber - 1][point + 1][0],
+							computed[iNumber - 1][point][0],
+							computed[iNumber - 1][point + 1][0],
 							easedT
 						), lerp(
-							saveData.computed[iNumber - 1][point][1],
-							saveData.computed[iNumber - 1][point + 1][1],
+							computed[iNumber - 1][point][1],
+							computed[iNumber - 1][point + 1][1],
 							easedT
 						)
 					]
@@ -334,6 +296,7 @@ function replay() {
 
 function advance() {
 	canvas.clear();
+	if (!saveData.settings.ease) saveData.settings.ease = 'quadraticEaseInOut'
 	$("speedometer").innerHTML =
 		"t=" + window[saveData.settings.ease](t).toFixed(2);
 	t += saveData.settings.speed;
@@ -343,21 +306,17 @@ function advance() {
 	drawTrail(final[0], final[1])
 	window.cancelAnimationFrame(advance)
 	initialPoints();
-	if (t >= 1 || playing === false) window.cancelAnimationFrame(advance),playing = false;
+	if (t >= 1 || playing === false) window.cancelAnimationFrame(advance), playing = false;
 	else window.requestAnimationFrame(advance)
 }
 
 function resetCurve() {
-	saveData = {
-		data: [
+	saveData.data = [
 			[331, 351],
 			[38, 351],
 			[331, 14],
 			[38, 14],
-		],
-		computed: [],
-		presets: saveData.presets
-	};
+		]
 	save.set();
 }
 var mouseIsDown = false;
@@ -477,25 +436,25 @@ function initialPoints() {
 }
 
 function drawMidPoints() {
-	for (let i = 0; i < saveData.computed.length; i++) {
-		for (let j = 0; j < saveData.computed[i].length; j++) {
+	for (let i = 0; i < computed.length; i++) {
+		for (let j = 0; j < computed[i].length; j++) {
 			let radius = 3
-			if (i === saveData.computed.length - 1 && saveData.settings.show.finalmidpoint === true) radius = 10
+			if (i === computed.length - 1 && saveData.settings.show.finalmidpoint === true) radius = 10
 			if (saveData.settings.show.midpoints == true || (radius == 10 && saveData.settings.show.finalmidpoint == true)) {
 				point(
-					saveData.computed[i][j][0],
-					saveData.computed[i][j][1],
+					computed[i][j][0],
+					computed[i][j][1],
 					radius
 				)
 			}
 			if (saveData.settings.show.lines == true) {
 				if (j > 0) line(
-					saveData.computed[i][j][0], saveData.computed[i][j][1],
-					saveData.computed[i][j - 1][0], saveData.computed[i][j - 1][1]
+					computed[i][j][0], computed[i][j][1],
+					computed[i][j - 1][0], computed[i][j - 1][1]
 				)
 			}
-			if (i === saveData.computed.length - 1) return [saveData.computed[i][j][0],
-			saveData.computed[i][j][1]
+			if (i === computed.length - 1) return [computed[i][j][0],
+			computed[i][j][1]
 			]
 		}
 	}
@@ -549,25 +508,26 @@ function updateCheckboxes() {
 		console.log(cur)
 		let objKey = saveData.settings.show[Object.keys(saveData.settings.show)[i]]
 		console.log(Object.keys(saveData.settings.show)[i])
-		if (objKey === true) cur.checked = true 
+		if (objKey === true) cur.checked = true
 		else cur.checked = false
 	}
 }
 
 function getColorSelectHTML() {
-    let res = `<select id="colorOption">
+	let res = `<select id="colorOption">
       `
-    for (let i = 0; i < colorAlgorithms.length; i++) {
-        selected = ''
-        if (saveData.settings.colorAlgorithm[i] === colorAlgorithms[i]) selected = 'selected'
-        res += `<option value="${colorAlgorithms[i]}" name="${colorAlgorithms[i]}" ${selected}>${colorAlgorithms[i]}</option>
+	for (let i = 0; i < colorAlgorithms.length; i++) {
+		selected = ''
+		if (saveData.settings.colorAlgorithm[i] === colorAlgorithms[i]) selected = 'selected'
+		res += `<option value="${colorAlgorithms[i]}" name="${colorAlgorithms[i]}" ${selected}>${colorAlgorithms[i]}</option>
           `
-    }
-    res += `
+	}
+	res += `
       </select>`
-      console.log(res)
-    return res
+	console.log(res)
+	return res
 }
+$('animationSpeed').value = saveData.settings.speed*1000
 $('colorOptionWrapper').innerHTML = getColorSelectHTML()
 /**********************
  * Saving Features
