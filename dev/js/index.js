@@ -156,7 +156,6 @@ function rainbow(number) {
 
 function grayscale(number) {
 	let newnum = `hsl(0,0%,${number / saveData.data.length * 100}%)`
-	console.log(newnum)
 	return newnum
 }
 var colors = []
@@ -489,7 +488,6 @@ oninput = e => {
 
 function computeTextColor(bgColor) {
 	var color = (bgColor.value.charAt(0) === '#') ? bgColor.value.substring(1, 7) : bgColor.value;
-	console.log(color)
 	var r = parseInt(color.substring(0, 2), 16); // hexToR
 	var g = parseInt(color.substring(2, 4), 16); // hexToG
 	var b = parseInt(color.substring(4, 6), 16); // hexToB
@@ -505,7 +503,6 @@ function computeTextColor(bgColor) {
 function updateCheckboxes() {
 	for (let i = 0; i < document.querySelectorAll('.showCheckbox').length; i++) {
 		let cur = document.querySelectorAll('.showCheckbox')[i]
-		console.log(cur)
 		let objKey = saveData.settings.show[Object.keys(saveData.settings.show)[i]]
 		console.log(Object.keys(saveData.settings.show)[i])
 		if (objKey === true) cur.checked = true
@@ -524,7 +521,6 @@ function getColorSelectHTML() {
 	}
 	res += `
       </select>`
-	console.log(res)
 	return res
 }
 $('animationSpeed').value = saveData.settings.speed*1000
