@@ -35,6 +35,8 @@
 </head>
 
 <body>
+    <canvas id="canvas"></canvas>
+    <canvas id="canvas2"></canvas>
     <div id="controls">
         <div id="minimize"
             onclick="this.parentElement.classList.toggle('hidden');this.parentElement.nextElementSibling.classList.toggle('hidden')">
@@ -140,7 +142,7 @@
         </div>
     </div>
 
-    <div class="quickActions hidden">
+    <div style="z-index: 5" class="quickActions hidden">
             <a id="quickPlay">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                 viewBox="0 0 267 267" style="enable-background:new 0 0 26 26;">
@@ -168,8 +170,7 @@
             </g>
         </svg>
     </div>
-    <canvas id="canvas"></canvas>
-    <canvas id="canvas2"></canvas>
+
     <div id="modalOverlay"></div>
     <p id="speedometer"
         style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">

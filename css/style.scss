@@ -357,7 +357,8 @@ input[type=text] {
     margin-left: 5px;
     padding: 4px 6px;
     font-size: 12px;
-    border-radius: 5px;
+    border-radius: 30px;
+    box-shadow: 0 0 10px 10px rgba(0,130,255,0.2);
     font-weight: 700;
     background: rgba(0, 130, 255, 0.8);
 }
@@ -367,6 +368,7 @@ input[type=text] {
     background: var(--background-color);
     padding: 10px;
     border-radius: 20px;
+    backdrop-filter: 20px;
     transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     bottom: 20px;
     position: fixed;
