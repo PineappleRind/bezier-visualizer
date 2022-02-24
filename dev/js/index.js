@@ -89,7 +89,14 @@ var saveData = {
 		show: null
 	}, {
 		name: "Infinity Warp",
-		data: [[683,396],[592,368],[737,382],[799,228],[764,49],[639,8],[456,144],[260,331],[97,398],[9,282],[16,91],[118,0],[288,93],[486,284],[618,384],[775,330],[796,142],[719,8],[565,50],[370,230],[158,393],[48,367],[0,198],[50,31],[185,19],[373,174],[568,353],[722,391],[796,254],[774,67],[660,2],[483,119],[285,310],[115,400],[15,306],[10,114],[100,2],[263,71],[460,259],[642,393],[765,349],[799,168],[735,17],[589,34],[396,204],[205,370],[62,380],[1,225],[38,46],[163,9]],
+		data: [[683, 396], [592, 368], [737, 382], [799, 228], [764, 49], [639, 8], [456, 144], [260, 331], [97, 398], [9, 282], [16, 91], [118, 0], [288, 93], [486, 284], [618, 384], [775, 330], [796, 142], [719, 8], [565, 50], [370, 230], [158, 393], [48, 367], [0, 198], [50, 31], [185, 19], [373, 174], [568, 353], [722, 391], [796, 254], [774, 67], [660, 2], [483, 119], [285, 310], [115, 400], [15, 306], [10, 114], [100, 2], [263, 71], [460, 259], [642, 393], [765, 349], [799, 168], [735, 17], [589, 34], [396, 204], [205, 370], [62, 380], [1, 225], [38, 46], [163, 9]],
+		show: {
+			"lines": false,
+			"midpoints": true,
+			"trail": false,
+			"controlpoints": false,
+			"finalmidpoint": false
+		}
 	},
 	{
 		name: "Circle Warp",
@@ -124,7 +131,26 @@ var saveData = {
 		colorAlgorithm: 'goldenAngle'
 	}
 };
-let computed =  []
+let buttonStates = {
+	play: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+                    <polygon fill="#ffffff" class="play-btn__svg" points="9.33 6.69 9.33 19.39 19.3 13.04 9.33 6.69" />
+                <path fill="#ffffff" class="play-btn__svg"
+                    d="M26,13A13,13,0,1,1,13,0,13,13,0,0,1,26,13ZM13,2.18A10.89,10.89,0,1,0,23.84,13.06,10.89,10.89,0,0,0,13,2.18Z" />
+                    </svg>`,
+	pause: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                    viewBox="0 0 267 267" style="enable-background:new 0 0 26 26;">
+                    <g>
+                        <path style="fill:#ffffff;"
+                            d="M135.977,271.953c75.097,0,135.977-60.879,135.977-135.977S211.074,0,135.977,0S0,60.879,0,135.977    S60.879,271.953,135.977,271.953z M135.977,21.756c62.979,0,114.22,51.241,114.22,114.22s-51.241,114.22-114.22,114.22    s-114.22-51.241-114.22-114.22S72.992,21.756,135.977,21.756z" />
+                        <path style="fill:#ffffff;"
+                            d="M110.707,200.114c7.511,0,13.598-6.086,13.598-13.598V83.174c0-7.511-6.086-13.598-13.598-13.598    c-7.511,0-13.598,6.086-13.598,13.598v103.342C97.109,194.028,103.195,200.114,110.707,200.114z" />
+                        <path style="fill:#ffffff;"
+                            d="M165.097,200.114c7.511,0,13.598-6.086,13.598-13.598V83.174c0-7.511-6.086-13.598-13.598-13.598    S151.5,75.663,151.5,83.174v103.342C151.5,194.028,157.586,200.114,165.097,200.114z" />
+                    </g>
+                </svg>`
+}
+let computed = []
 let root = document.documentElement;
 var save = {
 	getData: function () {
@@ -278,14 +304,20 @@ function line(startx, starty, finishx, finishy) {
 }
 
 function evaluatePlaying() {
-	if (playing === true) window.requestAnimationFrame(advance), ($("playBtn").innerHTML = "Stop");
-	else window.cancelAnimationFrame(advance), ($("playBtn").innerHTML = "Play")
+	let playbtn = $('quickPlay')
+	if (playing === true) window.requestAnimationFrame(advance), ($("playBtn").innerHTML = "Stop"), $('quickPlay').classList.add('playing');
+	else window.cancelAnimationFrame(advance), ($("playBtn").innerHTML = "Play"), $('quickPlay').classList.remove('playing');
+
+	if (playbtn.classList.contains('playing')) playbtn.innerHTML = buttonStates.pause
+	else playbtn.innerHTML = buttonStates.play
+
 }
 evaluatePlaying()
 updateCheckboxes()
 function replay() {
 	if (playing === true) window.cancelAnimationFrame(advance)
-	else window.requestAnimationFrame(advance)
+	else if (playing === false) window.requestAnimationFrame(advance)
+	else window.cancelAnimationFrame(advance)
 	t = 0;
 	canvas.clear()
 	trail.clear()
@@ -305,17 +337,21 @@ function advance() {
 	drawTrail(final[0], final[1])
 	window.cancelAnimationFrame(advance)
 	initialPoints();
-	if (t >= 1 || playing === false) window.cancelAnimationFrame(advance), playing = false;
+	if (t >= 1 || playing === false) {
+		window.cancelAnimationFrame(advance); playing = false;
+		$('playBtn').classList.remove('playing');
+		evaluatePlaying()
+	}
 	else window.requestAnimationFrame(advance)
 }
 
 function resetCurve() {
 	saveData.data = [
-			[331, 351],
-			[38, 351],
-			[331, 14],
-			[38, 14],
-		]
+		[331, 351],
+		[38, 351],
+		[331, 14],
+		[38, 14],
+	]
 	save.set();
 }
 var mouseIsDown = false;
@@ -504,7 +540,6 @@ function updateCheckboxes() {
 	for (let i = 0; i < document.querySelectorAll('.showCheckbox').length; i++) {
 		let cur = document.querySelectorAll('.showCheckbox')[i]
 		let objKey = saveData.settings.show[Object.keys(saveData.settings.show)[i]]
-		console.log(Object.keys(saveData.settings.show)[i])
 		if (objKey === true) cur.checked = true
 		else cur.checked = false
 	}
@@ -523,7 +558,7 @@ function getColorSelectHTML() {
       </select>`
 	return res
 }
-$('animationSpeed').value = saveData.settings.speed*1000
+$('animationSpeed').value = saveData.settings.speed * 1000
 $('colorOptionWrapper').innerHTML = getColorSelectHTML()
 /**********************
  * Saving Features
@@ -551,3 +586,18 @@ function loadSaveData(element) {
 }
 
 showSaveData()
+
+
+/*********************
+ * Quick Actions!
+ ********************/
+
+
+$('quickPlay').onclick = () => {
+	if (t >= 0.99) {
+		replay(); window.cancelAnimationFrame(advance)
+	} else {
+		playing = !playing
+		evaluatePlaying()
+	}
+}

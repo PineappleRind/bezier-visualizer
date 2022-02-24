@@ -4,11 +4,12 @@
     margin: 0;
     font-family: Inter, sans-serif;
     color: white;
+    box-sizing: border-box;
 }
 
 body {
-    --background-color: rgba(0, 72, 255, 0.1);
-    --background-color-hover: rgba(176, 198, 255, 0.24);
+    --background-color: rgba(139, 172, 255, 0.1);
+    --background-color-hover: rgba(198, 214, 255, 0.24);
     --border: 1px solid rgba(151, 158, 255, 0.3);
 }
 
@@ -256,7 +257,7 @@ form p#close:hover {
     transform: translateY(20px);
     display: block;
     padding: 40px;
-    max-height: 95vh;
+    max-height: 90vh;
     overflow-y: scroll;
     min-width: 300px;
     position: relative;
@@ -289,7 +290,7 @@ form p#close:hover {
     padding: 20px;
     background: var(--background-color);
     border: var(--border);
-
+    max-height:90vh !important;
     border-radius: 20px;
     margin: 10px;
 }
