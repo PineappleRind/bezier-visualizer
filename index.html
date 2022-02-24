@@ -36,10 +36,12 @@
 
 <body>
     <div id="controls">
-        <div id="minimize" onclick="this.parentElement.classList.toggle('hidden')">&times;</div>
+        <div id="minimize"
+            onclick="this.parentElement.classList.toggle('hidden');this.parentElement.nextElementSibling.classList.toggle('hidden')">
+            &times;</div>
         <div class="inner">
             <h1>Bezier Curve Visualizer</h1>
-            <h2 style="font-weight:200;font-size:25px;">how to use</h2>
+            <h2>how to use</h2>
             <p>You can:
             <ul>
                 <li>
@@ -53,9 +55,9 @@
                 </li>
             </ul>
             <hr>
-            <h2 style="font-weight:200;font-size:25px;">controls</h2>
+            <h2>controls</h2>
             <button id="playBtn"
-                onclick="playing = !playing;if (t <= 0.01) clearTrail();evaluatePlaying()">Stop</button>
+                onclick="playing = !playing;if (t <= 0.01) trail.clear();evaluatePlaying();">Stop</button>
             <button onclick="replay()">Restart</button>
             <button onclick="resetCurve()">Reset Curve</button>
             <br>
@@ -68,33 +70,65 @@
                 <option>easeInOutExpo</option>
                 <option>bounce</option>
             </select>
+            <br>
+            <p>Animation speed</p><br>
+            <input id="animationSpeed" oninput="saveData.settings.speed = this.value / 1000" type="range" min="0.5" max="20">
             <hr>
             <div>
-                <h2 style="font-weight:200;font-size:25px;">view</h2>
-                <input checked type="checkbox" id="lines"><label for="lines">Show Lines</label><br>
-                <input checked type="checkbox" id="midpoints"><label for="midpoints">Show Midpoints</label><br>
-                <input checked type="checkbox" id="trail"><label for="trail">Show Trail</label><br>
-                <input checked type="checkbox" id="controlpoints"><label for="controlpoints">Show Control
-                    Points</label><br>
-                <input checked type="checkbox" id="finalmidpoint"><label for="finalmidpoint">Show final midpoint (large
-                    white dot)</label>
+                <h2>view</h2>
+                <div id="showCheckboxes">
+                    <input class="showCheckbox" checked type="checkbox" id="lines"><label for="lines">Show
+                        Lines</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="midpoints"><label for="midpoints">Show
+                        Midpoints</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="trail"><label for="trail">Show
+                        Trail</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="controlpoints"><label
+                        for="controlpoints">Show Control
+                        Points</label><br>
+                    <input class="showCheckbox" checked type="checkbox" id="finalmidpoint"><label
+                        for="finalmidpoint">Show final midpoint (large
+                        white dot)</label>
+                </div>
             </div>
             <div>
                 <p>Control point color scheme</p>
-                <select id="colorOption">
-                    <option selected name="goldenAngle">goldenAngle</option>
-                    <option name="rainbow">rainbow</option>
-                    <option name="grayscale">grayscale</option>
-                </select>
+                <div id="colorOptionWrapper">
+                    <select id="colorOption">
+                        <option selected name="goldenAngle">goldenAngle</option>
+                        <option name="rainbow">rainbow</option>
+                        <option name="grayscale">grayscale</option>
+                    </select>
+                </div>
             </div>
             <hr>
-            <p>Background color</p>
-            <input type="color" id="bgColorPicker"
-                oninput="document.body.style.backgroundColor = this.value; computeTextColor(this);"><br><br>
-            <button
-                onclick="document.body.style.backgroundColor = '#000020';this.previousElementSibling.value = '000020';computeTextColor(this)">Reset
-                background color</button>
+            <div>
+                <h2 beta>presets </h2>
+                <p>Choose a preset to load:</p>
+
+                <select id="presetSelectChoice">
+                    <option>Loading presets...</option>
+                </select>
+                <br>
+                <p>This is the preset editor! You can open this to create, edit, and delete your curve presets.</p>
+                <button onclick="presetEditorPage(0)">Open Preset Editor...</button>
+            </div>
+
             <br>
+            <hr>
+            <div>
+                <h2 beta>data storage</h2>
+                <p>In this section there are a few tools you can use for data storage and management.</p>
+                <br>
+                <p>This is your data. It stores your current curve and your presets.</p>
+                <p>This is not cross-browser or cross-device. If you want to have your presets on a different
+                    browser/device, load the data below in the other browser/device.</p>
+                <textarea style="height: 100px;width:100%;" id="saveDataTextarea"></textarea>
+                <p>To load save data, paste your save data into the box above and click the Load Save Data button.</p>
+                <button onclick="loadSaveData(this.previousElementSibling.previousElementSibling)">Load Save
+                    Data</button>
+            </div>
+            <br><br>
             <hr>
             <a href="https://github.com/PineappleRind/bezier-visualizer/issues"><button>Report bugs or give
                     feedback</button></a>
@@ -105,17 +139,52 @@
             <br><br><br><br>
         </div>
     </div>
+
+    <div class="quickActions hidden">
+            <a id="quickPlay">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                viewBox="0 0 267 267" style="enable-background:new 0 0 26 26;">
+                <g>
+                    <path style="fill:#ffffff;"
+                        d="M135.977,271.953c75.097,0,135.977-60.879,135.977-135.977S211.074,0,135.977,0S0,60.879,0,135.977    S60.879,271.953,135.977,271.953z M135.977,21.756c62.979,0,114.22,51.241,114.22,114.22s-51.241,114.22-114.22,114.22    s-114.22-51.241-114.22-114.22S72.992,21.756,135.977,21.756z" />
+                    <path style="fill:#ffffff;"
+                        d="M110.707,200.114c7.511,0,13.598-6.086,13.598-13.598V83.174c0-7.511-6.086-13.598-13.598-13.598    c-7.511,0-13.598,6.086-13.598,13.598v103.342C97.109,194.028,103.195,200.114,110.707,200.114z" />
+                    <path style="fill:#ffffff;"
+                        d="M165.097,200.114c7.511,0,13.598-6.086,13.598-13.598V83.174c0-7.511-6.086-13.598-13.598-13.598    S151.5,75.663,151.5,83.174v103.342C151.5,194.028,157.586,200.114,165.097,200.114z" />
+                </g>
+            </svg>
+        </a>
+        <svg onclick="replay()" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            version="1.1" viewBox="0 0 512 512" style="enable-background:new 0 0 26 26;">
+            <g>
+                <g>
+                    <g>
+                        <path style="fill:#ffffff;"
+                            d="M256,0C114.618,0,0,114.618,0,256s114.618,256,256,256s256-114.618,256-256S397.382,0,256,0z M256,469.333     c-117.818,0-213.333-95.515-213.333-213.333S138.182,42.667,256,42.667S469.333,138.182,469.333,256S373.818,469.333,256,469.333     z" />
+                        <path style="fill:#ffffff;"
+                            d="M309.416,152.144l-149.333,85.333c-14.332,8.19-14.332,28.855,0,37.045l149.333,85.333     c14.222,8.127,31.918-2.142,31.918-18.523V170.667C341.333,154.286,323.638,144.017,309.416,152.144z M298.667,304.572     L213.665,256l85.001-48.572V304.572z" />
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </div>
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
     <div id="modalOverlay"></div>
     <p id="speedometer"
         style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">
     </p>
-    <!-- This is the non-development version of bezier visualizer -->
     <script src="js/index.js"></script>
+    <script src="js/presetEditor.js"></script>
+    <script></script>
     <script>
-
+        onerror = e => {
+            console.log(JSON.stringify(e))
+        }
     </script>
 </body>
 
 </html>
+
+
+<!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">-->

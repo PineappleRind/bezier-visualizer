@@ -4,22 +4,15 @@
     margin: 0;
     font-family: Inter, sans-serif;
     color: white;
+    box-sizing: border-box;
 }
 
 body {
-    --background-color: rgba(255, 255, 255, 0.1);
-    --border: 1px solid rgba(255, 255, 255, 0.3);
+    --background-color: rgba(139, 172, 255, 0.1);
+    --background-color-hover: rgba(198, 214, 255, 0.24);
+    --border: 1px solid rgba(151, 158, 255, 0.3);
 }
 
-body.black * {
-    color: black;
-
-}
-
-body.black {
-    --background-color: rgba(0, 0, 0, 0.1);
-    --border: 1px solid rgba(0, 0, 0, 0.3);
-}
 
 html,
 body {
@@ -37,6 +30,19 @@ body {
     justify-content: center;
 }
 
+::-webkit-scrollbar {
+    background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+    background: var(--background-color-hover)
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 72, 255, 0.705)
+}
+
 canvas {
     position: absolute;
     top: 0;
@@ -52,23 +58,25 @@ canvas {
 
 #controls {
     top: 0;
-    background: var(--background-color);
     position: fixed;
     right: 0;
-    width: calc(225px + 20%);
-    height: 100%;
     z-index: 9;
-    border-radius: 20px 0 0px 20px;
+    height: 100%;
+    background: var(--background-color);
+    width: calc(225px + 20%);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
     transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     border: var(--border);
     border-right: 0;
+    overflow: hidden;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 
     .inner {
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 100vh;
+        height: 100%;
         transition: 0.5s cubic-bezier(.04, .91, .54, .99);
         padding: 30px;
     }
@@ -76,7 +84,7 @@ canvas {
     #minimize {
         transition: 0.5s;
         position: absolute;
-        left: -30px;
+        left: 10px;
         text-shadow: 0 0 10px black;
         top: 10px;
         padding: 2px;
@@ -97,9 +105,11 @@ canvas {
 
     &.hidden {
         transform: translateX(100%);
+        overflow: visible;
     }
 
     &.hidden #minimize {
+        left: -30px;
         transform: rotate(495deg);
     }
 }
@@ -108,7 +118,7 @@ button {
     padding: 10px 13px;
     border: var(--border);
     border-radius: 10px;
-    transition: 0.4s;
+    transition: 0.2s;
     margin-bottom: 5px;
     cursor: pointer;
     background: var(--background-color);
@@ -116,7 +126,8 @@ button {
 
 button:hover {
     border: 1px solid rgba(255, 255, 255, 0.8);
-    background: var(--background-color);
+    background: var(--background-color-hover);
+    transform: translateY(-1px);
 }
 
 
@@ -125,7 +136,7 @@ select {
     border-radius: 10px;
     padding: 10px;
     display: block;
-    background: rgba(255, 255, 255, 0.2)
+    background: var(--background-color);
 }
 
 select * {
@@ -140,7 +151,12 @@ hr {
     margin: 15px 6px;
     border: 0;
     height: 1px;
-    background: rgba(255, 255, 255, 0.342);
+    background: var(--background-color);
+}
+
+h2 {
+    font-weight: 200;
+    font-size: 25px;
 }
 
 form {
@@ -241,14 +257,14 @@ form p#close:hover {
     transform: translateY(20px);
     display: block;
     padding: 40px;
-    max-height: 95vh;
-    overflow-y:scroll;
+    max-height: 90vh;
+    overflow-y: scroll;
     min-width: 300px;
     position: relative;
     opacity: 0;
     border-radius: 20px;
-    background: rgba(255, 255, 255, .1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: var(--background-color);
+    border: var(--border);
 }
 
 .modal h1 {
@@ -258,10 +274,10 @@ form p#close:hover {
 .modal #close {
     font-size: 27px;
     position: absolute;
-    top:10px;
-    margin:0;
-    right:10px;
-    cursor:pointer;
+    top: 10px;
+    margin: 0;
+    right: 10px;
+    cursor: pointer;
 }
 
 .modal.showing {
@@ -272,9 +288,9 @@ form p#close:hover {
 
 .modal .preset {
     padding: 20px;
-    background: rgba(255, 255, 255, .1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-
+    background: var(--background-color);
+    border: var(--border);
+    max-height:90vh !important;
     border-radius: 20px;
     margin: 10px;
 }
@@ -290,29 +306,87 @@ form p#close:hover {
     left: 50%;
     margin: 10px;
     border-radius: 10px;
-    background: rgba(255,255,255,0.1);
+    background: var(--background-color);
+    border: var(--border);
     padding: 10px;
     z-index: 11;
     color: white;
     transform: translateY(-50px) translateX(-50%);
-    opacity:0;
+    opacity: 0;
     transition: 0.5s;
     font-size: 25px;
-    backdrop-filter:blur(14px) opacity(0);
+    backdrop-filter: blur(14px) opacity(0);
 }
 
 .toast.showing {
-    opacity:1;
-    backdrop-filter:blur(14px) opacity(1);
+    opacity: 1;
+    backdrop-filter: blur(14px) opacity(1);
     transform: translateX(-50%);
     left: 50%;
 }
 
-textarea, input[type=text] {
+.toast.error {
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+}
+
+.toast.success {
+    background: rgba(60, 255, 0, 0.2);
+    border: 1px solid rgba(60, 255, 0, 0.5);
+}
+
+textarea,
+input[type=text] {
     border: 1px solid rgba(255, 255, 255, .4);
     background: rgba(255, 255, 255, .03);
     border-radius: 10px;
     padding: 10px;
     color: white;
     font-family: monospace
+}
+
+[beta] {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    justify-content: center;
+}
+
+[beta]::after {
+    content: 'BETA';
+    margin-left: 5px;
+    padding: 4px 6px;
+    font-size: 12px;
+    border-radius: 5px;
+    font-weight: 700;
+    background: rgba(0, 130, 255, 0.8);
+}
+
+.quickActions {
+    border: var(--border);
+    background: var(--background-color);
+    padding: 10px;
+    border-radius: 20px;
+    transition: 0.5s cubic-bezier(.04, .91, .54, .99);
+    bottom: 20px;
+    position: fixed;
+    right: 20px;
+    z-index: 9;
+    display: flex;
+
+    &.hidden {
+        transform: translateX(120%);
+    }
+
+    svg {
+        height: 30px;
+        width: 30px;
+        cursor: pointer;
+        margin: 5px;
+        transition: 0.2s;
+        &:hover {
+            filter:drop-shadow(0 0 10px white);
+            transform:scale(1.1);
+        }
+    }
 }
