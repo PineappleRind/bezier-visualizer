@@ -38,44 +38,43 @@
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
     <div id="controls">
-        <div id="minimize"
-            onclick="this.parentElement.classList.toggle('hidden');this.parentElement.nextElementSibling.classList.toggle('hidden')">
+        <div id="minimize">
             &times;</div>
         <div class="inner">
             <h1>Bezier Curve Visualizer</h1>
-            <h2>how to use</h2>
-            <p>You can:
-            <ul>
-                <li>
-                    <p>drag points and see how the curve changes</p>
-                </li>
-                <li>
-                    <p>change ease functions for the animation</p>
-                </li>
-                <li>
-                    <p>double tap/click on a point to remove it, or in a blank space to add a point</p>
-                </li>
-            </ul>
-            <hr>
-            <h2>controls</h2>
-            <button id="playBtn"
-                onclick="playing = !playing;if (t <= 0.01) trail.clear();evaluatePlaying();">Stop</button>
-            <button onclick="replay()">Restart</button>
-            <button onclick="resetCurve()">Reset Curve</button>
-            <br>
-            <hr>
-            <p>Easing function in the animation</p>
-            <select id="easeOption">
-                <option>linear</option>
-                <option selected>easeInOutQuad</option>
-                <option>easeInOutQuart</option>
-                <option>easeInOutExpo</option>
-                <option>bounce</option>
-            </select>
-            <br>
-            <p>Animation speed</p><br>
-            <input id="animationSpeed" oninput="saveData.settings.speed = this.value / 1000" type="range" min="0.5" max="20">
-            <hr>
+            <div>
+                <h2>how to use</h2>
+                <p>You can:
+                <ul>
+                    <li>
+                        <p>drag points and see how the curve changes</p>
+                    </li>
+                    <li>
+                        <p>change ease functions for the animation</p>
+                    </li>
+                    <li>
+                        <p>double tap/click on a point to remove it, or in a blank space to add a point</p>
+                    </li>
+                </ul>
+            </div>
+            <div>
+
+                <h2>controls</h2>
+                <button id="playBtn">Stop</button>
+                <button id="replayBtn">Restart</button>
+                <button id="resetCurveBtn">Reset Curve</button>
+                <p>Easing function in the animation</p>
+                <select id="easeOption">
+                    <option>linear</option>
+                    <option selected>easeInOutQuad</option>
+                    <option>easeInOutQuart</option>
+                    <option>easeInOutExpo</option>
+                    <option>bounce</option>
+                </select>
+
+                <p>Animation speed</p>
+                <input id="animationSpeed" type="range" min="0.5" max="20">
+            </div>
             <div>
                 <h2>view</h2>
                 <div id="showCheckboxes">
@@ -90,10 +89,8 @@
                         Points</label><br>
                     <input class="showCheckbox" checked type="checkbox" id="finalmidpoint"><label
                         for="finalmidpoint">Show final midpoint (large
-                        white dot)</label>
+                        white dot)</label><br>
                 </div>
-            </div>
-            <div>
                 <p>Control point color scheme</p>
                 <div id="colorOptionWrapper">
                     <select id="colorOption">
@@ -103,47 +100,51 @@
                     </select>
                 </div>
             </div>
-            <hr>
             <div>
-                <h2 beta>presets </h2>
+                <h2 beta>presets</h2>
                 <p>Choose a preset to load:</p>
 
                 <select id="presetSelectChoice">
                     <option>Loading presets...</option>
                 </select>
-                <br>
-                <p>This is the preset editor! You can open this to create, edit, and delete your curve presets.</p>
-                <button onclick="presetEditorPage(0)">Open Preset Editor...</button>
-            </div>
 
-            <br>
-            <hr>
+                <p>Preset editor coming soon...</p>
+
+            </div>
             <div>
                 <h2 beta>data storage</h2>
                 <p>In this section there are a few tools you can use for data storage and management.</p>
-                <br>
+
                 <p>This is your data. It stores your current curve and your presets.</p>
                 <p>This is not cross-browser or cross-device. If you want to have your presets on a different
                     browser/device, load the data below in the other browser/device.</p>
                 <textarea style="height: 100px;width:100%;" id="saveDataTextarea"></textarea>
                 <p>To load save data, paste your save data into the box above and click the Load Save Data button.</p>
-                <button onclick="loadSaveData(this.previousElementSibling.previousElementSibling)">Load Save
+                <button id="loadSaveDataBtn">Load Save
                     Data</button>
             </div>
-            <br><br>
-            <hr>
-            <a href="https://github.com/PineappleRind/bezier-visualizer/issues"><button>Report bugs or give
-                    feedback</button></a>
-            <br>
-            <a href="https://github.com/PineappleRind/bezier-visualizer/releases"><button>What's new?</button></a>
-            <br>
-            <a href="https://github.com/PineappleRind/bezier-visualizer/projects"><button>Planned features</button></a>
-            <br><br><br><br>
+            <div>
+                <h2>how it works</h2>
+                <p>This visualizer uses an implementation of DeCasteljau's algorithm. For how this works, see the
+                    Geometric interpretation section of <a
+                        href="https://en.wikipedia.org/wiki/De_Casteljau%27s_algorithm#Geometric_interpretation">this
+                        Wikipedia page.</a></p>
+            </div>
+            <div>
+                <h2>contribute</h2>
+                <a href="https://github.com/PineappleRind/bezier-visualizer/issues"><button>Report bugs or give
+                        feedback</button></a>
+                <a href="https://github.com/PineappleRind/bezier-visualizer/releases"><button>What's new?</button></a>
+                <a href="https://github.com/PineappleRind/bezier-visualizer/projects"><button>Planned
+                        features</button></a>
+            </div>
+
+
         </div>
     </div>
 
-    <div style="z-index: 5" class="quickActions hidden">
-            <a id="quickPlay">
+    <div style="z-index: 5" id="quickActions" class="quickActions hidden">
+        <a id="quickPlay">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                 viewBox="0 0 267 267" style="enable-background:new 0 0 26 26;">
                 <g>
@@ -156,27 +157,27 @@
                 </g>
             </svg>
         </a>
-        <svg onclick="replay()" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-            version="1.1" viewBox="0 0 512 512" style="enable-background:new 0 0 26 26;">
-            <g>
+        <a id="quickReplay">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                viewBox="0 0 512 512" style="enable-background:new 0 0 26 26;">
                 <g>
                     <g>
-                        <path style="fill:#ffffff;"
-                            d="M256,0C114.618,0,0,114.618,0,256s114.618,256,256,256s256-114.618,256-256S397.382,0,256,0z M256,469.333     c-117.818,0-213.333-95.515-213.333-213.333S138.182,42.667,256,42.667S469.333,138.182,469.333,256S373.818,469.333,256,469.333     z" />
-                        <path style="fill:#ffffff;"
-                            d="M309.416,152.144l-149.333,85.333c-14.332,8.19-14.332,28.855,0,37.045l149.333,85.333     c14.222,8.127,31.918-2.142,31.918-18.523V170.667C341.333,154.286,323.638,144.017,309.416,152.144z M298.667,304.572     L213.665,256l85.001-48.572V304.572z" />
+                        <g>
+                            <path style="fill:#ffffff;"
+                                d="M256,0C114.618,0,0,114.618,0,256s114.618,256,256,256s256-114.618,256-256S397.382,0,256,0z M256,469.333     c-117.818,0-213.333-95.515-213.333-213.333S138.182,42.667,256,42.667S469.333,138.182,469.333,256S373.818,469.333,256,469.333     z" />
+                            <path style="fill:#ffffff;"
+                                d="M309.416,152.144l-149.333,85.333c-14.332,8.19-14.332,28.855,0,37.045l149.333,85.333     c14.222,8.127,31.918-2.142,31.918-18.523V170.667C341.333,154.286,323.638,144.017,309.416,152.144z M298.667,304.572     L213.665,256l85.001-48.572V304.572z" />
+                        </g>
                     </g>
                 </g>
-            </g>
-        </svg>
+            </svg></a>
     </div>
 
     <div id="modalOverlay"></div>
     <p id="speedometer"
         style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">
     </p>
-    <script src="js/index.js"></script>
-    <script src="js/presetEditor.js"></script>
+    <script src="js/dev/index.js"></script>
     <script></script>
     <script>
         onerror = e => {

@@ -1,5 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Bevan&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+@mixin flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin fixedPosition($t, $b, $r, $l) {
+    top: $t;
+    bottom: $b;
+    left: $l;
+    right: $r;
+}
+
+@mixin size($w, $h) {
+    width: $w;
+    height: $h;
+}
+
+@mixin blur($amt) {
+    backdrop-filter: blur($amt);
+    -webkit-backdrop-filter: blur($amt);
+}
+
 * {
     margin: 0;
     font-family: Inter, sans-serif;
@@ -10,14 +33,13 @@
 body {
     --background-color: rgba(139, 172, 255, 0.1);
     --background-color-hover: rgba(198, 214, 255, 0.24);
+    --background-color-hover-intense: rgba(198, 214, 255, 0.317);
     --border: 1px solid rgba(151, 158, 255, 0.3);
 }
 
-
 html,
 body {
-    height: 100vh;
-    width: 100vw;
+    @include size(100vw, 100vh);
     overscroll-behavior-y: none;
     overflow: hidden;
     z-index: -1;
@@ -25,9 +47,7 @@ body {
 
 body {
     background: #000020;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex;
 }
 
 ::-webkit-scrollbar {
@@ -40,7 +60,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 72, 255, 0.705)
+    background: var(--background-color-hover-intense);
 }
 
 canvas {
@@ -57,21 +77,19 @@ canvas {
 }
 
 #controls {
+    @include size(calc(225px + 20%), 100%);
+    @include blur(20px);
     top: 0;
-    position: fixed;
     right: 0;
+    position: fixed;
     z-index: 9;
-    height: 100%;
     background: var(--background-color);
-    width: calc(225px + 20%);
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     border: var(--border);
     border-right: 0;
     overflow: hidden;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
 
     .inner {
         overflow-y: scroll;
@@ -79,14 +97,18 @@ canvas {
         height: 100%;
         transition: 0.5s cubic-bezier(.04, .91, .54, .99);
         padding: 30px;
+        >div {
+           padding: 10px;
+           border-top: var(--border); 
+        }
     }
 
     #minimize {
         transition: 0.5s;
         position: absolute;
-        left: 10px;
         text-shadow: 0 0 10px black;
         top: 10px;
+        left: 10px;
         padding: 2px;
         line-height: 17px;
         cursor: pointer;
@@ -95,8 +117,6 @@ canvas {
         border-radius: 20px;
         height: 20px;
         font-size: 30px;
-
-
 
         &:hover {
             border: var(--border-hover);
@@ -129,7 +149,6 @@ button:hover {
     background: var(--background-color-hover);
     transform: translateY(-1px);
 }
-
 
 select *,
 select {
@@ -167,10 +186,8 @@ form {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, .3);
     background: rgba(53, 54, 124, 0.959);
-    display: flex;
+    @include flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 form button {
@@ -208,39 +225,28 @@ form p#close:hover {
     overflow: hidden;
 
     &:after {
+        @include blur(3px);
+        @include fixedPosition(0, 0, 0, 0);
+        @include flex;
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
         content: 'Under construction';
-        display: flex;
-        align-items: center;
-        justify-content: center;
         font-weight: 900;
         font-family: 'Bevan', 'Rockwell', 'Impact', sans-serif;
         cursor: not-allowed;
         background: rgba(30, 38, 105, 0.938);
         border-radius: 10px;
         border: 2px dashed rgba(55, 65, 211, 0.9);
-        backdrop-filter: blur(3px);
-        -webkit-backdrop-filter: blur(3px);
     }
 }
 
 #modalOverlay {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
+    @include fixedPosition(0, 0, 0, 0);
+    @include flex;
+    @include size(100vw, 100vh);
     position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
     background: 0;
+    filter: blur(0);
     pointer-events: none;
     z-index: 10;
     transition: 0.5s;
@@ -248,12 +254,12 @@ form p#close:hover {
 
 #modalOverlay.showing {
     background: rgba(0, 0, 0, 0.4);
+    filter: blur(20px);
     pointer-events: all;
 }
 
 .modal {
     transition: 0.5s;
-    backdrop-filter: blur(14px) opacity(0);
     transform: translateY(20px);
     display: block;
     padding: 40px;
@@ -265,39 +271,38 @@ form p#close:hover {
     border-radius: 20px;
     background: var(--background-color);
     border: var(--border);
-}
 
-.modal h1 {
-    margin: 10px;
+    h1 {
+        margin: 10px;
+    }
 }
 
 .modal #close {
     font-size: 27px;
     position: absolute;
     top: 10px;
-    margin: 0;
     right: 10px;
+    margin: 0;
     cursor: pointer;
 }
 
 .modal.showing {
     transform: translateY(0px);
     opacity: 1;
-    backdrop-filter: blur(14px) opacity(1) !important;
 }
 
 .modal .preset {
     padding: 20px;
     background: var(--background-color);
     border: var(--border);
-    max-height:90vh !important;
+    max-height: 90vh !important;
     border-radius: 20px;
     margin: 10px;
-}
 
-.modal .preset h1 {
-    font-size: larger;
-    margin: 0;
+    h1 {
+        font-size: larger;
+        margin: 0;
+    }
 }
 
 .toast {
@@ -316,27 +321,27 @@ form p#close:hover {
     transition: 0.5s;
     font-size: 25px;
     backdrop-filter: blur(14px) opacity(0);
-}
 
-.toast.showing {
-    opacity: 1;
-    backdrop-filter: blur(14px) opacity(1);
-    transform: translateX(-50%);
-    left: 50%;
-}
+    .showing {
+        opacity: 1;
+        backdrop-filter: blur(14px) opacity(1);
+        transform: translateX(-50%);
+        left: 50%;
+    }
 
-.toast.error {
-    background: rgba(255, 0, 0, 0.2);
-    border: 1px solid rgba(255, 0, 0, 0.5);
-}
+    .error {
+        background: rgba(255, 0, 0, 0.2);
+        border: 1px solid rgba(255, 0, 0, 0.5);
+    }
 
-.toast.success {
-    background: rgba(60, 255, 0, 0.2);
-    border: 1px solid rgba(60, 255, 0, 0.5);
+    .success {
+        background: rgba(60, 255, 0, 0.2);
+        border: 1px solid rgba(60, 255, 0, 0.5);
+    }
 }
 
 textarea,
-input[type=text] {
+[type=text] {
     border: 1px solid rgba(255, 255, 255, .4);
     background: rgba(255, 255, 255, .03);
     border-radius: 10px;
@@ -344,23 +349,21 @@ input[type=text] {
     color: white;
     font-family: monospace
 }
-
-[beta] {
-    display: flex;
-    align-items: center;
-    width: fit-content;
-    justify-content: center;
+[type=checkbox] {
+    display: inline-block;
 }
 
-[beta]::after {
-    content: 'BETA';
-    margin-left: 5px;
-    padding: 4px 6px;
-    font-size: 12px;
-    border-radius: 30px;
-    box-shadow: 0 0 10px 10px rgba(0,130,255,0.2);
-    font-weight: 700;
-    background: rgba(0, 130, 255, 0.8);
+[beta] {
+    &::after {
+        content: 'BETA';
+        margin-left: 5px;
+        padding: 4px 6px;
+        font-size: 12px;
+        border-radius: 30px;
+        box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
+        font-weight: 700;
+        background: rgba(0, 130, 255, 0.8);
+    }
 }
 
 .quickActions {
@@ -381,14 +384,14 @@ input[type=text] {
     }
 
     svg {
-        height: 30px;
-        width: 30px;
+        @include size(30px, 30px);
         cursor: pointer;
         margin: 5px;
         transition: 0.2s;
+
         &:hover {
-            filter:drop-shadow(0 0 10px white);
-            transform:scale(1.1);
+            filter: drop-shadow(0 0 10px white);
+            transform: scale(1.1);
         }
     }
 }
