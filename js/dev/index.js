@@ -97,26 +97,6 @@
 			colorAlgorithm: 'goldenAngle'
 		}
 	};
-	var { data, presets, show, settings } = saveData
-	let buttonStates = {
-		play: `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
-                    <polygon fill="#ffffff" class="play-btn__svg" points="9.33 6.69 9.33 19.39 19.3 13.04 9.33 6.69" />
-                <path fill="#ffffff" class="play-btn__svg"
-                    d="M26,13A13,13,0,1,1,13,0,13,13,0,0,1,26,13ZM13,2.18A10.89,10.89,0,1,0,23.84,13.06,10.89,10.89,0,0,0,13,2.18Z" />
-                    </svg>`,
-		pause: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                    viewBox="0 0 267 267" style="enable-background:new 0 0 26 26;">
-                    <g>
-                        <path style="fill:#ffffff;"
-                            d="M135.977,271.953c75.097,0,135.977-60.879,135.977-135.977S211.074,0,135.977,0S0,60.879,0,135.977    S60.879,271.953,135.977,271.953z M135.977,21.756c62.979,0,114.22,51.241,114.22,114.22s-51.241,114.22-114.22,114.22    s-114.22-51.241-114.22-114.22S72.992,21.756,135.977,21.756z" />
-                        <path style="fill:#ffffff;"
-                            d="M110.707,200.114c7.511,0,13.598-6.086,13.598-13.598V83.174c0-7.511-6.086-13.598-13.598-13.598    c-7.511,0-13.598,6.086-13.598,13.598v103.342C97.109,194.028,103.195,200.114,110.707,200.114z" />
-                        <path style="fill:#ffffff;"
-                            d="M165.097,200.114c7.511,0,13.598-6.086,13.598-13.598V83.174c0-7.511-6.086-13.598-13.598-13.598    S151.5,75.663,151.5,83.174v103.342C151.5,194.028,157.586,200.114,165.097,200.114z" />
-                    </g>
-                </svg>`
-	}
 	let keybinds = {
 		' ': () => {
 			playing = !playing;
@@ -137,12 +117,10 @@
 
 	var save = {
 		getData: function () {
-			var { data, presets, show, settings } = saveData
 			return JSON.parse(localStorage.getItem("bezierSaveData"));
 		},
 		set: function () {
 			showSaveData()
-			var { data, presets, show, settings } = saveData
 			return localStorage.setItem("bezierSaveData", JSON.stringify(saveData));
 		},
 	};
@@ -155,7 +133,7 @@
 			return (`hsl(${number * 20},100%,50%)`)
 		},
 		'grayscale': (number) => {
-			return `hsl(0,0%,${number / data.length * 100}%)`
+			return `hsl(0,0%,${number / saveData.data.length * 100}%)`
 		}
 	}
 	var eases = {
@@ -175,8 +153,8 @@
 	}
 
 	var colors = []
-	data.forEach(function (val, ind) {
-		colors.push(colorAlgorithms[settings.colorAlgorithm](ind))
+	saveData.data.forEach(function (val, ind) {
+		colors.push(colorAlgorithms[saveData.settings.colorAlgorithm](ind))
 	})
 	function toast(msg, theme) {
 		let toast = document.createElement('DIV')
@@ -194,7 +172,7 @@
 		})
 		document.body.appendChild(toast)
 	}
-	let toIterate = data.length - 1;
+	let toIterate = saveData.data.length - 1;
 	var playing = true;
 	var canvas = {
 		element: $("canvas"),
@@ -216,35 +194,25 @@
 	function addPoint(x, y) {
 		colorIteration++
 		colors.push(colorAlgorithms[settings.colorAlgorithm](colorIteration))
-		if (!x) x = 0
-		if (!y) y = 0
-		data.push([x, y])
+		x = 0 || x, y = 0 || y
+		saveData.data.push([x, y])
 		toIterate = data.length - 1;
 		initialPoints()
 		save.set()
 	}
 	function com(easedT) {
 		toIterate = saveData.data.length - 1;
-		if (toIterate > 10) return 
-		computed = Array.from({
-			length: toIterate
-		}, () => []);
+		computed = Array.from({ length: toIterate }, () => []);
 		for (let i = 0; i < toIterate; i++) { // For each iteration of midpoints:            
 			for (let point = 0; point < toIterate - i; point++) { //For each point in the iteration of midpoints: 
-				if (i === 0) { // If it's the first iteration         
-					computed[i].push([
-					  lerp(saveData.data[point][0], saveData.data[point + 1][0], easedT), 
-					  lerp(saveData.data[point][1], saveData.data[point + 1][1], easedT)
-					]);
-				} else if (i != 0 && point < toIterate - i) { // If it's not the first iteration     
-					computed[i].push([
-					  lerp(computed[i - 1][point][0], computed[i - 1][point + 1][0], easedT), 
-					  lerp(computed[i - 1][point][1], computed[i - 1][point + 1][1], easedT)
-					])
-				}
+				let lerpOn = i === 0 ? saveData.data : computed[i - 1]
+				// If it's the first iteration, lerp on the control points. Otherwise lerp on the previous iteration's midpoints
+				computed[i].push([
+					lerp(lerpOn[point][0], lerpOn[point + 1][0], easedT), 
+					lerp(lerpOn[point][1], lerpOn[point + 1][1], easedT)
+				]);
 			}
 		}
-		console.log(computed)
 	}
 	function resizeHandler() {
 		canvas.element.setAttribute('height', window.innerHeight);
@@ -289,7 +257,6 @@
 	$('animationSpeed').oninput = e => saveData.settings.speed = e.target.value / 1000
 
 	function evaluatePlaying() {
-		let playbtn = $('quickPlay')
 		if (playing === true) {
 			window.requestAnimationFrame(advance);
 			 $('quickPlay').classList.add('playing');
@@ -298,8 +265,7 @@
 			$('quickPlay').classList.remove('playing');
 		}
 		$("playBtn").innerHTML = playing ? "Stop" : "Play";
-		if (playbtn.classList.contains('playing')) playbtn.innerHTML = buttonStates.pause
-		else playbtn.innerHTML = buttonStates.play
+		$('quickPlay').innerHTML = playing ? "Stop" : "Play";
 	}
 	evaluatePlaying()
 	updateCheckboxes()

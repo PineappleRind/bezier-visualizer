@@ -376,9 +376,6 @@ textarea,
   text-decoration: none;
   transition: 0.5s;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .quickActions a:hover {
   transform: scale(1.1);

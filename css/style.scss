@@ -383,14 +383,19 @@ textarea,
         transform: translateX(120%);
     }
 
-    svg {
-        @include size(30px, 30px);
+    a {
+        margin: 0 10px;
+        padding: 10px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, .1);
+        border: 1px solid rgba(255, 255, 255, .3);
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        transition: 0.5s;
         cursor: pointer;
-        margin: 5px;
-        transition: 0.2s;
 
         &:hover {
-            filter: drop-shadow(0 0 10px white);
             transform: scale(1.1);
         }
     }
