@@ -3,7 +3,8 @@
   margin: 0;
   font-family: Inter, sans-serif;
   color: white;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 body {
@@ -24,9 +25,15 @@ body {
 
 body {
   background: #000020;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 ::-webkit-scrollbar {
@@ -67,23 +74,29 @@ canvas {
   background: var(--background-color);
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
+  -webkit-transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   border: var(--border);
   border-right: 0;
   overflow: hidden;
 }
+
 #controls .inner {
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
+  -webkit-transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   padding: 30px;
 }
+
 #controls .inner > div {
   padding: 10px;
   border-top: var(--border);
 }
+
 #controls #minimize {
+  -webkit-transition: 0.5s;
   transition: 0.5s;
   position: absolute;
   text-shadow: 0 0 10px black;
@@ -98,22 +111,28 @@ canvas {
   height: 20px;
   font-size: 30px;
 }
+
 #controls #minimize:hover {
   border: var(--border-hover);
 }
+
 #controls.hidden {
-  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%);
   overflow: visible;
 }
+
 #controls.hidden #minimize {
   left: -30px;
-  transform: rotate(495deg);
+  -webkit-transform: rotate(495deg);
+          transform: rotate(495deg);
 }
 
 button {
   padding: 10px 13px;
   border: var(--border);
   border-radius: 10px;
+  -webkit-transition: 0.2s;
   transition: 0.2s;
   margin-bottom: 5px;
   cursor: pointer;
@@ -123,7 +142,8 @@ button {
 button:hover {
   border: 1px solid rgba(255, 255, 255, 0.8);
   background: var(--background-color-hover);
-  transform: translateY(-1px);
+  -webkit-transform: translateY(-1px);
+          transform: translateY(-1px);
 }
 
 select *,
@@ -157,15 +177,25 @@ h2 {
 form {
   position: fixed;
   bottom: 0;
+  -webkit-transition: 0.2s;
   transition: 0.2s;
   padding: 30px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(53, 54, 124, 0.959);
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 form button {
@@ -190,18 +220,21 @@ form p#close {
 }
 
 form p#close:hover {
-  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }
 
 .form-hidden {
   opacity: 0;
-  transform: translateY(10px);
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
 }
 
 [construction] {
   position: relative;
   overflow: hidden;
 }
+
 [construction]:after {
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -209,13 +242,19 @@ form p#close:hover {
   bottom: 0;
   left: 0;
   right: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   position: absolute;
-  content: "Under construction";
+  content: 'Under construction';
   font-weight: 900;
-  font-family: "Bevan", "Rockwell", "Impact", sans-serif;
+  font-family: 'Bevan', 'Rockwell', 'Impact', sans-serif;
   cursor: not-allowed;
   background: rgba(30, 38, 105, 0.938);
   border-radius: 10px;
@@ -227,29 +266,43 @@ form p#close:hover {
   bottom: 0;
   left: 0;
   right: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   width: 100vw;
   height: 100vh;
   position: fixed;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   background: 0;
-  filter: blur(0);
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
   pointer-events: none;
   z-index: 10;
+  -webkit-transition: 0.5s;
   transition: 0.5s;
 }
 
 #modalOverlay.showing {
   background: rgba(0, 0, 0, 0.4);
-  filter: blur(20px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   pointer-events: all;
 }
 
 .modal {
+  -webkit-transition: 0.5s;
   transition: 0.5s;
-  transform: translateY(20px);
+  -webkit-transform: translateY(20px);
+          transform: translateY(20px);
   display: block;
   padding: 40px;
   max-height: 90vh;
@@ -261,6 +314,7 @@ form p#close:hover {
   background: var(--background-color);
   border: var(--border);
 }
+
 .modal h1 {
   margin: 10px;
 }
@@ -275,7 +329,8 @@ form p#close:hover {
 }
 
 .modal.showing {
-  transform: translateY(0px);
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
   opacity: 1;
 }
 
@@ -287,6 +342,7 @@ form p#close:hover {
   border-radius: 20px;
   margin: 10px;
 }
+
 .modal .preset h1 {
   font-size: larger;
   margin: 0;
@@ -303,22 +359,30 @@ form p#close:hover {
   padding: 10px;
   z-index: 11;
   color: white;
-  transform: translateY(-50px) translateX(-50%);
+  -webkit-transform: translateY(-50px) translateX(-50%);
+          transform: translateY(-50px) translateX(-50%);
   opacity: 0;
+  -webkit-transition: 0.5s;
   transition: 0.5s;
   font-size: 25px;
-  backdrop-filter: blur(14px) opacity(0);
+  -webkit-backdrop-filter: blur(14px) opacity(0);
+          backdrop-filter: blur(14px) opacity(0);
 }
+
 .toast .showing {
   opacity: 1;
-  backdrop-filter: blur(14px) opacity(1);
-  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(14px) opacity(1);
+          backdrop-filter: blur(14px) opacity(1);
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
   left: 50%;
 }
+
 .toast .error {
   background: rgba(255, 0, 0, 0.2);
   border: 1px solid rgba(255, 0, 0, 0.5);
 }
+
 .toast .success {
   background: rgba(60, 255, 0, 0.2);
   border: 1px solid rgba(60, 255, 0, 0.5);
@@ -339,12 +403,13 @@ textarea,
 }
 
 [beta]::after {
-  content: "BETA";
+  content: 'BETA';
   margin-left: 5px;
   padding: 4px 6px;
   font-size: 12px;
   border-radius: 30px;
-  box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
+  -webkit-box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
+          box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
   font-weight: 700;
   background: rgba(0, 130, 255, 0.8);
 }
@@ -354,17 +419,24 @@ textarea,
   background: var(--background-color);
   padding: 10px;
   border-radius: 20px;
-  backdrop-filter: 20px;
+  -webkit-backdrop-filter: 20px;
+          backdrop-filter: 20px;
+  -webkit-transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   bottom: 20px;
   position: fixed;
   right: 20px;
   z-index: 9;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
+
 .quickActions.hidden {
-  transform: translateX(120%);
+  -webkit-transform: translateX(120%);
+          transform: translateX(120%);
 }
+
 .quickActions a {
   margin: 0 10px;
   padding: 10px;
@@ -374,12 +446,13 @@ textarea,
   color: white;
   font-size: 20px;
   text-decoration: none;
+  -webkit-transition: 0.5s;
   transition: 0.5s;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
+
 .quickActions a:hover {
-  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }
+/*# sourceMappingURL=style.css.map */
