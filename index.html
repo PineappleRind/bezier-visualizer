@@ -40,6 +40,7 @@
     <div id="controls">
         <div id="minimize">
             &times;</div>
+            
         <div class="inner">
             <h1>Bezier Curve Visualizer</h1>
             <div>
@@ -100,17 +101,14 @@
                     </select>
                 </div>
             </div>
-            <div>
+            <!--<div>
                 <h2 beta>presets</h2>
                 <p>Choose a preset to load:</p>
 
                 <select id="presetSelectChoice">
                     <option>Loading presets...</option>
                 </select>
-
-               <button id="presetEditorOpener">Open Preset Editor</button>
-
-            </div>
+            </div>-->
             <div>
                 <h2 beta>data storage</h2>
                 <p>In this section there are a few tools you can use for data storage and management.</p>
@@ -140,6 +138,11 @@
             </div>
 
 
+            <div class="banner">
+                <p>To temporarily save the curves you make, this website uses cookies.</p>
+                <a id="bannerDontStore" href="#">Don't store cookies</a>
+                <button id="bannerClose">Close</button>
+            </div>
         </div>
     </div>
 
@@ -152,7 +155,7 @@
     <p id="speedometer"
         style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">
     </p>
-    <script src="js/index.js"></script>
+    <script src="js/index.min.js"></script>
     <script> </script>
 </body>
 

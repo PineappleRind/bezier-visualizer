@@ -56,11 +56,10 @@ body {
 
 ::-webkit-scrollbar-thumb {
     border-radius: 100px;
-    background: var(--background-color-hover)
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--background-color-hover-intense);
+    background: var(--background-color-hover);
+    &:hover {
+        background: var(--background-color-hover-intense);
+    }
 }
 
 canvas {
@@ -220,6 +219,27 @@ form p#close:hover {
     transform: translateY(10px)
 }
 
+.banner {
+    margin: 20px;
+    transition: 0.3s;
+    position: absolute;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    bottom: 0;
+    padding: 10px;
+    background: rgba(25, 39, 82, 0.4);
+    border: var(--border);
+    border-radius: 10px;
+}
+.banner a {
+    font-size: 12px;
+    opacity: 0.7;
+    margin: 0 5px;
+    &:hover {
+        opacity:1;
+    }
+}
+
 [construction] {
     position: relative;
     overflow: hidden;
@@ -371,11 +391,12 @@ textarea,
 .quickActions {
     border: var(--border);
     background: var(--background-color);
-    padding: 10px;
+    padding: 0px;
     border-radius: 20px;
     backdrop-filter: 20px;
     transition: 0.5s cubic-bezier(.04, .91, .54, .99);
     bottom: 20px;
+    overflow: hidden;
     position: fixed;
     right: 20px;
     z-index: 9;
@@ -386,19 +407,17 @@ textarea,
     }
 
     a {
-        margin: 0 10px;
-        padding: 10px;
-        border-radius: 20px;
+        padding: 10px 20px;
         background: rgba(255, 255, 255, .1);
-        border: 1px solid rgba(255, 255, 255, .3);
         color: white;
-        font-size: 20px;
+        font-size: 15px;
         text-decoration: none;
-        transition: 0.5s;
+        user-select: none;
+        transition: 0.3s;
         cursor: pointer;
 
         &:hover {
-            transform: scale(1.1);
+            background: rgba(255,255,255,0.3)
         }
     }
 }
