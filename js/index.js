@@ -40,32 +40,35 @@ void (function () {
 				name: "Default",
 				data: [
 					[30, 250], [250, 250], [30, 30], [250, 30],
-				],
-				show: null,
+				]
 			},
 			{
 				name: "Bow",
 				data: [
 					[143, 323], [482, 25], [54, 21], [113, 373], [231, 298], [482, 25], [54, 21], [279, 300], [371, 381], [483, 25], [54, 20], [357, 324],
-				],
-				show: null,
+				]
 			},
 			{
 				name: "Cursive f",
 				data: [
 					[193, 313], [513, 246], [42, 42], [410, 6], [120, 586], [567, 521], [53, 339], [332, 283],
-				],
-				show: null,
+				]
 			},
 			{
-				name: "Infinity Warp",
+				name: "Music note",
+				data: [
+					[280, 240], [119, 241], [340, 40], [140, 40], [140, 500], [400, 500], [40, 340], [210, 340]
+				]
+			},
+			{
+				name: "Warp: infinity",
 				data: [
 					[683, 396], [592, 368], [737, 382], [799, 228], [764, 49], [639, 8], [456, 144], [260, 331], [97, 398], [9, 282], [16, 91], [118, 0], [288, 93], [486, 284], [618, 384], [775, 330], [796, 142], [719, 8], [565, 50], [370, 230], [158, 393], [48, 367], [0, 198], [50, 31], [185, 19], [373, 174], [568, 353], [722, 391], [796, 254], [774, 67], [660, 2], [483, 119], [285, 310], [115, 400], [15, 306], [10, 114], [100, 2], [263, 71], [460, 259], [642, 393], [765, 349], [799, 168], [735, 17], [589, 34], [396, 204], [205, 370], [62, 380], [1, 225], [38, 46], [163, 9],
 				],
 				show: bits.midpoints,
 			},
 			{
-				name: "Circle Warp",
+				name: "Warp: circle",
 				data: [
 					[300, 600], [552, 462], [573, 175], [342, 3], [73, 104], [12, 385], [216, 588], [495, 528], [597, 256], [424, 27], [137, 48], [0, 301], [139, 553], [426, 572], [597, 341], [495, 72], [214, 13], [12, 217], [75, 498], [345, 597], [574, 422], [551, 136], [297, 0], [46, 140], [28, 427], [260, 597], [529, 494], [587, 212], [381, 11], [101, 76], [4, 346], [179, 574], [465, 550], [600, 296], [459, 45], [172, 29], [2, 262], [107, 530], [389, 587], [589, 380], [524, 100], [252, 4], [25, 180], [50, 467], [305, 600], [555, 458], [571, 170], [337, 2], [70, 108], [14, 390], [221, 589], [501, 523], [596, 251], [419, 25], [132, 51], [0, 307], [144, 556], [431, 570], [598, 336], [491, 69], [209, 14], [10, 223], [78, 502], [350, 596], [576, 418], [548, 131], [292, 0], [43, 145], [31, 432], [266, 598], [532, 490], [585, 207], [376, 10], [97, 79], [4, 352], [184, 577], [470, 547], [600, 291], [454, 43], [167, 31], [2, 267], [111, 533], [394, 585], [591, 375], [520, 96], [247, 5], [23, 185], [53, 471], [311, 600], [558, 453], [568, 166], [332, 2], [66, 112], [16, 395], [226, 591], [505, 519], [595, 246], [414, 22], [128, 54], [0, 312],
 				],
@@ -333,7 +336,7 @@ void (function () {
 		e.target.parentElement.classList.toggle("hidden");
 		e.target.parentElement.nextElementSibling.classList.toggle("hidden");
 	};
-	$("#playBtn").onclick = $('#quickPlay') = (e) => {
+	$("#playBtn").onclick = $('#quickPlay').onclick = (e) => {
 		playing = !playing;
 		if (t <= 0.01) trail.clear();
 		evaluatePlaying();
@@ -341,9 +344,12 @@ void (function () {
 	$("#replayBtn").onclick = replay;
 	$("#quickReplay").onclick = replay;
 	$("#resetCurveBtn").onclick = resetCurve;
-	$("#animationSpeed").oninput = (e) =>
+	$("#animationSpeed").oninput = (e) => {
 		(saveData.settings.speed = e.target.value / 1000);
-
+	}
+	$('#tValue').oninput = (e) => {
+		playing = !playing;
+	}
 	function evaluatePlaying() {
 		if (playing === true) {
 			window.requestAnimationFrame(advance);
@@ -503,7 +509,7 @@ void (function () {
 	function initialPoints() {
 		const { data: d } = saveData;
 		if (bits.compare(bits.lines)) {
-			for (var i = 0; i < data.length - 1; i++) {
+			for (var i = 0; i < d.length - 1; i++) {
 				draw.line(d[i][0], d[i][1], d[i + 1][0], d[i + 1][1]);
 			}
 		}
@@ -642,4 +648,30 @@ void (function () {
 			evaluatePlaying();
 		}
 	};
+
+	/*******************
+	 * Presets
+	 * Initially coded around Nov 2021
+	 * Adapted for life inside an IIFE on August 19, 2022 
+	 *******************/
+	var psc = $('#presetSelectChoice')
+	psc.innerHTML = presetSelectHTML();
+	function presetSelectHTML() {
+		let res = ``
+		for (const [i, preset] of saveData.presets.entries()) {
+			res += `<option value="${i}"${preset.data == saveData.data ? ' selected' : ''}>${preset.name}</option>`
+		}
+		return res
+	}
+	psc.oninput = () => {
+		loadPreset(+psc.value)
+		save.set()
+	}
+	function loadPreset(i) {
+		let newPreset = saveData.presets[i];
+		saveData.data = newPreset.data;
+		saveData.settings.show = newPreset.show || 0b11111;
+
+		replay(), save.set(), updateCheckboxes()
+	}
 })();

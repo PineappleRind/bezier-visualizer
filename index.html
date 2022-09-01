@@ -64,7 +64,8 @@
                 <button id="playBtn">Stop</button>
                 <button id="replayBtn">Restart</button>
                 <button id="resetCurveBtn">Reset Curve</button>
-                <p>Easing function in the animation</p>
+                <br>
+                <p>Animation ease</p>
                 <select id="easeOption">
                     <option>linear</option>
                     <option selected>easeInOutQuad</option>
@@ -72,8 +73,11 @@
                     <option>easeInOutExpo</option>
                     <option>bounce</option>
                 </select>
-
-                <p>Animation speed</p>
+                <br>
+                <p><code>t</code> value (<code><span id="tValueLabel">0</span></code>)</p>
+                <input id="tValue" type="range" min="0" max="1" step="0.01">
+                <br>
+                <p>Animation speed (<code>t += <span id="animationSpeedLabel">0.5</span></code> every frame)</p>
                 <input id="animationSpeed" type="range" min="0.5" max="20">
             </div>
             <div>
@@ -92,6 +96,7 @@
                         for="finalmidpoint">Show final midpoint (large
                         white dot)</label><br>
                 </div>
+                <br>
                 <p>Control point color scheme</p>
                 <div id="colorOptionWrapper">
                     <select id="colorOption">
@@ -101,14 +106,16 @@
                     </select>
                 </div>
             </div>
-            <!--<div>
+            <div>
                 <h2 beta>presets</h2>
                 <p>Choose a preset to load:</p>
 
                 <select id="presetSelectChoice">
                     <option>Loading presets...</option>
                 </select>
-            </div>-->
+                <br>
+                <small style="opacity:0.7">Want to add a preset? Create a pull request on <a href="https://github.com/pineapplerind/bezier-visualizer/pulls">GitHub</a></smalls>
+            </div>
             <div>
                 <h2 beta>data storage</h2>
                 <p>In this section there are a few tools you can use for data storage and management.</p>
@@ -155,7 +162,7 @@
     <p id="speedometer"
         style="font-family:monospace;position:fixed;pointer-events:none;bottom:10px;left:10px;font-size:20px;z-index:59;">
     </p>
-    <script src="js/index.min.js"></script>
+    <script src="js/index.js"></script>
     <script> </script>
 </body>
 

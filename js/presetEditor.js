@@ -66,19 +66,7 @@ function getPresetListHTML() {
     return res
 }
 
-function getPresetSelectHTML() {
-    let res = `<select id="presetChoice">
-       `
-    for (let i = 0; i < saveData.presets.length; i++) {
-        selected = ''
-        if (saveData.presets[i].data == saveData.data) selected = 'selected'
-        res += `<option value="${i}" ${selected}>${saveData.presets[i].name}</option>
-           `
-    }
-    res += `
-       </select>`
-    return res
-}
+
 
 function removePreset(index) {
     saveData.presets.splice(index, 1);

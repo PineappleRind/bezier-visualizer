@@ -57,6 +57,7 @@ body {
 ::-webkit-scrollbar-thumb {
     border-radius: 100px;
     background: var(--background-color-hover);
+
     &:hover {
         background: var(--background-color-hover-intense);
     }
@@ -73,6 +74,16 @@ canvas {
     z-index: -2;
     opacity: 0.5;
     pointer-events: none;
+}
+
+code {
+    padding: 2px;
+    font-family: monospace;
+    background: var(--background-color)
+}
+
+code * {
+    font-family: monospace
 }
 
 #controls {
@@ -96,9 +107,10 @@ canvas {
         height: 100%;
         transition: 0.5s cubic-bezier(.04, .91, .54, .99);
         padding: 30px;
+
         >div {
-           padding: 10px;
-           border-top: var(--border); 
+            padding: 10px;
+            border-top: var(--border);
         }
     }
 
@@ -231,12 +243,14 @@ form p#close:hover {
     border: var(--border);
     border-radius: 10px;
 }
+
 .banner a {
     font-size: 12px;
     opacity: 0.7;
     margin: 0 5px;
+
     &:hover {
-        opacity:1;
+        opacity: 1;
     }
 }
 
@@ -344,19 +358,19 @@ form p#close:hover {
     font-size: 25px;
     backdrop-filter: blur(14px) opacity(0);
 
-    .showing {
+    &.showing {
         opacity: 1;
         backdrop-filter: blur(14px) opacity(1);
         transform: translateX(-50%);
         left: 50%;
     }
 
-    .error {
+    &.error {
         background: rgba(255, 0, 0, 0.2);
         border: 1px solid rgba(255, 0, 0, 0.5);
     }
 
-    .success {
+    &.success {
         background: rgba(60, 255, 0, 0.2);
         border: 1px solid rgba(60, 255, 0, 0.5);
     }
@@ -371,6 +385,7 @@ textarea,
     color: white;
     font-family: monospace
 }
+
 [type=checkbox] {
     display: inline-block;
 }
@@ -382,9 +397,8 @@ textarea,
         padding: 4px 6px;
         font-size: 12px;
         border-radius: 30px;
-        box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
-        font-weight: 700;
-        background: rgba(0, 130, 255, 0.8);
+        font-weight: 300;
+        text-shadow: 0 0 10px rgba(0, 132, 255, 1), 0 0 10px rgba(0, 132, 255, 1);
     }
 }
 
@@ -417,7 +431,7 @@ textarea,
         cursor: pointer;
 
         &:hover {
-            background: rgba(255,255,255,0.3)
+            background: rgba(255, 255, 255, 0.3)
         }
     }
 }
