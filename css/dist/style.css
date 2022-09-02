@@ -325,7 +325,7 @@ form p#close:hover {
 }
 
 textarea,
-[type=text] {
+[type="text"] {
   border: 1px solid rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
@@ -334,7 +334,7 @@ textarea,
   font-family: monospace;
 }
 
-[type=checkbox] {
+[type="checkbox"] {
   display: inline-block;
 }
 

@@ -1,10 +1,9 @@
 ---
 name: Design fix / enhancement
 about: Suggest fixes or enhancements to the design
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: ""
+assignees: ""
 ---
 
 **Element to enhance or fix the design of**
