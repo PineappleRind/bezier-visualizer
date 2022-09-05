@@ -343,9 +343,10 @@ form p#close:hover {
   padding: 10px;
   z-index: 11;
   color: white;
-  transform: translateY(-50px) translateX(-50%);
+  transform: translateY(10px) translateX(-50%);
   opacity: 0;
   transition: 0.5s;
+  animation: show-toast 0.5s;
   font-size: 25px;
   backdrop-filter: blur(14px) opacity(0);
 
@@ -364,6 +365,13 @@ form p#close:hover {
   &.success {
     background: rgba(60, 255, 0, 0.2);
     border: 1px solid rgba(60, 255, 0, 0.5);
+  }
+}
+
+@keyframes show-toast {
+  from {
+    transform: translateY(-10px) translateX(-50%);
+    opacity: 0;
   }
 }
 
@@ -600,7 +608,8 @@ select {
   cursor: pointer;
 }
 
-select:hover, select:focus {
+select:hover,
+select:focus {
   background: var(--background-color-hover);
   border: var(--border-hover);
 }

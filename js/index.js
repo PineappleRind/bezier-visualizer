@@ -41,7 +41,7 @@ void (function () {
       {
         name: "Default",
         data: [
-          [30, 250],[250, 250],[30, 30],[250, 30],
+          [30, 250], [250, 250], [30, 30], [250, 30],
         ],
         show: null,
       },
@@ -68,7 +68,7 @@ void (function () {
       {
         name: "Warp: infinity",
         data: [
-          [683, 396], [592, 368], [737, 382], [799, 228], [764, 49], [639, 8], [456, 144], [260, 331], [97, 398], [9, 282], [16, 91], [118, 0], [288, 93], [486, 284], [618, 384], [775, 330], [796, 142], [719, 8], [565, 50], [370, 230], [158, 393], [48, 367], [0, 198], [50, 31], [185, 19], [373, 174], [568, 353], [722, 391], [796, 254], [774, 67], [660, 2], [483, 119], [285, 310], [115, 400], [15, 306], [10, 114], [100, 2], [263, 71], [460, 259], [642, 393], [765, 349], [799, 168], [735, 17], [589, 34], [396, 204], [205, 370], [62, 380], [1, 225], [38, 46], [163, 9],,
+          [683, 396], [592, 368], [737, 382], [799, 228], [764, 49], [639, 8], [456, 144], [260, 331], [97, 398], [9, 282], [16, 91], [118, 0], [288, 93], [486, 284], [618, 384], [775, 330], [796, 142], [719, 8], [565, 50], [370, 230], [158, 393], [48, 367], [0, 198], [50, 31], [185, 19], [373, 174], [568, 353], [722, 391], [796, 254], [774, 67], [660, 2], [483, 119], [285, 310], [115, 400], [15, 306], [10, 114], [100, 2], [263, 71], [460, 259], [642, 393], [765, 349], [799, 168], [735, 17], [589, 34], [396, 204], [205, 370], [62, 380], [1, 225], [38, 46], [163, 9], ,
         ],
         show: bits.midpoints,
       },
@@ -95,7 +95,6 @@ void (function () {
       playing = !playing;
       if (t <= 0.01) trail.clear();
       else if (t >= 0.999) replay();
-      evaluatePlaying();
     },
     Enter: () => {
       $("#controls").classList.toggle("hidden");
@@ -154,18 +153,16 @@ void (function () {
   var eases = {
     easeInOutQuad: (x) =>
       x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2,
-    easeInOutExpo: (x) => {
-      return x === 0
+    easeInOutExpo: (x) =>
+      x === 0
         ? 0
         : x === 1
         ? 1
         : x < 0.5
         ? Math.pow(2, 20 * x - 10) / 2
-        : (2 - Math.pow(2, -20 * x + 10)) / 2;
-    },
-    easeInOutQuart: (x) => {
-      return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
-    },
+        : (2 - Math.pow(2, -20 * x + 10)) / 2,
+    easeInOutQuart: (x) =>
+      x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
     bounce: (x) => {
       const n1 = 7.5625,
         d1 = 2.75;
@@ -187,27 +184,47 @@ void (function () {
     colors.push(colorAlgorithms[saveData.settings.colorAlgorithm](ind));
   });
 
-  // toasts!
-  function toast(msg, theme) {
-    let toast = document.createElement("DIV");
-    toast.classList.add("toast");
-    toast.classList.add(theme);
-    toast.innerHTML = msg;
-    setTimeout(function () {
-      toast.classList.add("showing");
-      setTimeout(function () {
-        toast.classList.remove("showing");
-        setTimeout(function () {
-          toast.remove();
-        }, 500);
-      }, 3000);
-    });
-    document.body.appendChild(toast);
-  }
+  let controls = {
+    _playing: true,
+    animationFrame: null,
+    set playing(newv) {
+      window.cancelAnimationFrame(this.animationFrame);
+      this.animationFrame =
+        window[`${newv ? "request" : "cancel"}AnimationFrame`](advance);
+
+      $("#playBtn").innerHTML = $("#quickPlay").innerHTML = newv
+        ? "Stop"
+        : "Play";
+
+      // store it
+      this._playing = newv;
+    },
+    get playing() {
+      return this._playing;
+    },
+  };
 
   // number of iterations for the algorithm until it finds the final point
-  let toIterate = saveData.data.length - 1;
-  let playing = true;
+  let toIterate = saveData.data.length - 1,
+    colorIteration = 1,
+    t = 0,
+    prev = [];
+
+  // toasts!
+  function toast(msg, theme) {
+    // create
+    let toast = document.createElement("DIV");
+    // style
+    toast.classList.add("toast", theme, "showing");
+    toast.innerHTML = msg;
+    setTimeout(() => {
+      toast.classList.remove("showing");
+      setTimeout(() => {
+        toast.remove();
+      }, 500);
+    }, 3000);
+    document.body.appendChild(toast);
+  }
 
   // canvas manager
   var canvas = {
@@ -230,8 +247,6 @@ void (function () {
       trail.context.clearRect(0, 0, trail.element.width, trail.element.height);
     },
   };
-  var t = 0, // t value
-    colorIteration = 1;
 
   function addPoint(x, y) {
     colorIteration++;
@@ -278,7 +293,7 @@ void (function () {
     trail.element.setAttribute("height", window.innerHeight);
     trail.element.setAttribute("width", window.innerWidth);
   }
-  resizeHandler();
+
   onresize = () => {
     resizeHandler();
     initialPoints();
@@ -342,9 +357,8 @@ void (function () {
     $("#controls").classList.toggle("hidden");
   };
   $("#playBtn").onclick = $("#quickPlay").onclick = (e) => {
-    playing = !playing;
+    controls.playing = !controls.playing;
     if (t <= 0.01) trail.clear();
-    evaluatePlaying();
   };
   $("#replayBtn").onclick = replay;
   $("#quickReplay").onclick = replay;
@@ -357,61 +371,45 @@ void (function () {
     $("#tValueLabel").innerHTML = e.target.value;
     t = +e.target.value;
     advance();
-    playing = false;
-    evaluatePlaying();
+    controls.playing = false;
   };
 
-  // evaulate the playing boolean
-  function evaluatePlaying() {
-    if (playing === true) {
-      window.requestAnimationFrame(advance);
-      $("#quickPlay").classList.add("playing");
-    } else {
-      window.cancelAnimationFrame(advance);
-      $("#quickPlay").classList.remove("playing");
-    }
-    $("#playBtn").innerHTML = $("#quickPlay").innerHTML = playing
-      ? "Stop"
-      : "Play";
-  }
-  evaluatePlaying();
-  updateCheckboxes();
-
   function replay() {
-    playing
-      ? window.cancelAnimationFrame(advance)
-      : window.requestAnimationFrame(advance);
     t = 0;
-    canvas.clear();
     trail.clear();
-    playing = true;
+    controls.playing = false;
+    controls.playing = true;
     initialPoints();
   }
-  let prev = [];
 
   function advance() {
     canvas.clear();
     if (!saveData.settings.ease) saveData.settings.ease = "quadraticEaseInOut";
-
     let easedT = eases[saveData.settings.ease](t);
 
+    // Update T value
     $("#speedometer").innerHTML =
       $("#tValue").value =
       $("#tValueLabel").innerHTML =
         easedT.toFixed(3);
+
     t += saveData.settings.speed;
+
+    // Compute
     compute(easedT);
     let final = drawMidPoints();
-    draw.trail(final[0], final[1], prev[0], prev[1]);
-    prev = final;
-    initialPoints();
-    window.cancelAnimationFrame(advance);
 
-    (easedT >= 1 || t >= 1) || playing === false
-      ? // stop if it shouldn't be playing
-        ((playing = false), evaluatePlaying())
-      : // continue if it should
-        window.requestAnimationFrame(advance);
+    // Draw
+    draw.trail(final[0], final[1], prev[0], prev[1]);
+    initialPoints();
+    prev = final;
+
+    // Next frame
+    // stop if it shouldn't be playing
+    if (easedT < 0 || easedT >= 1 || controls.playing === false)
+      controls.playing = false;
+    // continue if it should
+    else controls.playing = true;
   }
 
   function resetCurve() {
@@ -704,8 +702,6 @@ void (function () {
   }
   $("#loadSaveDataBtn").onclick = (e) => void loadSaveData();
 
-  showSaveData();
-
   /*********************
    * Quick Actions!
    ********************/
@@ -713,11 +709,7 @@ void (function () {
   $("#quickPlay").onclick = () => {
     if (t >= 0.999) {
       replay();
-      window.cancelAnimationFrame(advance);
-    } else {
-      playing = !playing;
-      evaluatePlaying();
-    }
+    } else controls.playing = !controls.playing;
   };
 
   /*******************
@@ -747,4 +739,13 @@ void (function () {
 
     replay(), save.set(), updateCheckboxes();
   }
+
+  /*********
+   * Init
+   ********/
+  updateCheckboxes();
+  showSaveData();
+  resizeHandler();
+  // Start the animation
+  controls.playing = true;
 })();
