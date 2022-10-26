@@ -88,7 +88,7 @@
           <button id="playBtn">Stop</button>
           <button id="replayBtn">Restart</button>
           <button id="resetCurveBtn">Reset Curve</button>
-          <p>Easing function in the animation</p>
+          <p class="subheading-separator">Easing function in the animation</p>
           <div class="select-wrap">
             <select id="easeOption">
               <option>linear</option>
@@ -98,14 +98,12 @@
               <option>bounce</option>
             </select>
           </div>
-          <br />
-          <p>
+          <p class="subheading-separator">
             <code>t</code> value (<code><span id="tValueLabel">0</span></code
             >)
           </p>
           <input id="tValue" type="range" min="0" max="1" step="0.001" />
-          <br /><br />
-          <p>
+          <p class="subheading-separator">
             Animation speed (<code
               >t += <span id="animationSpeedLabel">0.005</span></code
             >
@@ -114,7 +112,7 @@
           <input
             id="animationSpeed"
             type="range"
-            step="0.001"
+            step="0.0001"
             min="0.001"
             max="0.01"
             value="0.005"
@@ -122,41 +120,42 @@
         </div>
         <div>
           <h2>view</h2>
+          <p class="subheading-separator">Show...</p>
           <div id="showCheckboxes">
             <input
               class="showCheckbox"
               checked
               type="checkbox"
               id="lines"
-            /><label for="lines">Show Lines</label><br />
+            /><label for="lines">Lines</label><br />
             <input
               class="showCheckbox"
               checked
               type="checkbox"
               id="midpoints"
-            /><label for="midpoints">Show Midpoints</label><br />
+            /><label for="midpoints">Midpoints</label><br />
             <input
               class="showCheckbox"
               checked
               type="checkbox"
               id="trail"
-            /><label for="trail">Show Trail</label><br />
+            /><label for="trail">Trail</label><br />
             <input
               class="showCheckbox"
               checked
               type="checkbox"
               id="controlpoints"
-            /><label for="controlpoints">Show Control Points</label><br />
+            /><label for="controlpoints">Control Points</label><br />
             <input
               class="showCheckbox"
               checked
               type="checkbox"
               id="finalmidpoint"
             /><label for="finalmidpoint"
-              >Show final midpoint (large white dot)</label
+              >Final midpoint (large white dot)</label
             ><br />
           </div>
-          <p>Control point color scheme</p>
+          <p class="subheading-separator">Control point color scheme</p>
           <div class="select-wrap">
             <select id="colorOption">
               <option selected name="goldenAngle">goldenAngle</option>
@@ -167,7 +166,7 @@
         </div>
         <div>
           <h2 beta>presets</h2>
-          <p>Choose a preset to load:</p>
+          <p class="subheading-separator">Choose a preset to load:</p>
 
           <div class="select-wrap">
             <select id="presetSelectChoice">

@@ -93,8 +93,7 @@ void (function () {
   let keybinds = {
     " ": () => {
       playing = !playing;
-      if (t <= 0.01) trail.clear();
-      else if (t >= 0.999) replay();
+      if (t >= 0.999) replay();
     },
     Enter: () => {
       $("#controls").classList.toggle("hidden");
@@ -112,7 +111,7 @@ void (function () {
   let computed = [];
 
   var save = {
-    getData: function () {
+    get data() {
       return JSON.parse(localStorage.getItem("bezierSaveData"));
     },
     set: function () {
@@ -123,8 +122,8 @@ void (function () {
     },
   };
 
-  if (!save.getData()) save.set();
-  else saveData = save.getData();
+  if (!save.data) save.set();
+  else saveData = save.data;
 
   // Onclick handlers for the cookie banner
   const removeBanner = (n) => {
@@ -191,6 +190,8 @@ void (function () {
       window.cancelAnimationFrame(this.animationFrame);
       this.animationFrame =
         window[`${newv ? "request" : "cancel"}AnimationFrame`](advance);
+
+      if (t <= 0.01) trail.clear();
 
       $("#playBtn").innerHTML = $("#quickPlay").innerHTML = newv
         ? "Stop"
@@ -351,18 +352,20 @@ void (function () {
   /*************
    * Button Handlers
    ***************/
+
+  // Onclick
   $("#minimize").onclick = (e) => {
     $("#quickActions").classList.toggle("hidden");
     $("#speedometer").classList.toggle("hidden");
     $("#controls").classList.toggle("hidden");
   };
-  $("#playBtn").onclick = $("#quickPlay").onclick = (e) => {
-    controls.playing = !controls.playing;
-    if (t <= 0.01) trail.clear();
-  };
+
+  $("#playBtn").onclick = $("#quickPlay").onclick = () => controls.playing = !controls.playing;
   $("#replayBtn").onclick = replay;
   $("#quickReplay").onclick = replay;
   $("#resetCurveBtn").onclick = resetCurve;
+
+  // Oninput
   $("#animationSpeed").oninput = (e) => {
     $("#animationSpeedLabel").innerHTML = e.target.value;
     saveData.settings.speed = +e.target.value;
@@ -382,6 +385,7 @@ void (function () {
     initialPoints();
   }
 
+  // Next frame function
   function advance() {
     canvas.clear();
     if (!saveData.settings.ease) saveData.settings.ease = "quadraticEaseInOut";
@@ -406,7 +410,7 @@ void (function () {
 
     // Next frame
     // stop if it shouldn't be playing
-    if (easedT < 0 || easedT >= 1 || controls.playing === false)
+    if (easedT < 0 || t >= 1 || controls.playing === false)
       controls.playing = false;
     // continue if it should
     else controls.playing = true;
@@ -659,7 +663,7 @@ void (function () {
     res += `</select>`;
     return res;
   }
-  $("#animationSpeed").value = saveData.settings.speed;
+
   $("#colorOption").parentElement.innerHTML = getColorSelectHTML();
   /**********************
    * Saving Features
@@ -746,6 +750,9 @@ void (function () {
   updateCheckboxes();
   showSaveData();
   resizeHandler();
+  // Update animation speed value
+  $("#animationSpeed").value = $("#animationSpeedLabel").innerHTML = saveData.settings.speed.toFixed(4);
+
   // Start the animation
   controls.playing = true;
 })();

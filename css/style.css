@@ -3,8 +3,7 @@
   margin: 0;
   font-family: Inter, sans-serif;
   color: white;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
@@ -28,15 +27,9 @@ body {
 
 body {
   background: #000020;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 ::-webkit-scrollbar {
@@ -47,7 +40,6 @@ body {
   border-radius: 100px;
   background: var(--background-color-hover);
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: var(--background-color-hover-intense);
 }
@@ -87,29 +79,23 @@ code * {
   background: var(--background-color);
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  -webkit-transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   border: var(--border);
   border-right: 0;
   overflow: hidden;
 }
-
 #controls .inner {
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
-  -webkit-transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   padding: 30px;
 }
-
 #controls .inner > div {
   padding: 10px;
   border-top: var(--border);
 }
-
 #controls #minimize {
-  -webkit-transition: 0.5s;
   transition: 0.5s;
   position: absolute;
   text-shadow: 0 0 10px black;
@@ -124,28 +110,22 @@ code * {
   height: 20px;
   font-size: 30px;
 }
-
 #controls #minimize:hover {
-  border: var(--border-hover);
+  scale: 1.1;
 }
-
 #controls.hidden {
-  -webkit-transform: translateX(100%);
-          transform: translateX(100%);
+  transform: translateX(100%);
   overflow: visible;
 }
-
 #controls.hidden #minimize {
   left: -30px;
-  -webkit-transform: rotate(495deg);
-          transform: rotate(495deg);
+  transform: rotate(495deg);
 }
 
 button {
   padding: 10px 13px;
   border: var(--border);
   border-radius: 10px;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
   margin-bottom: 5px;
   cursor: pointer;
@@ -155,12 +135,15 @@ button {
 button:hover {
   border: var(--border-hover);
   background: var(--background-color-hover);
-  -webkit-transform: translateY(-1px);
-          transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 #controls p {
   margin: 5px;
+}
+#controls p.subheading-separator {
+  margin: 2px;
+  margin-top: 10px;
 }
 
 hr {
@@ -178,25 +161,15 @@ h2 {
 form {
   position: fixed;
   bottom: 0;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
   padding: 30px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(53, 54, 124, 0.959);
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 form button {
@@ -221,19 +194,16 @@ form p#close {
 }
 
 form p#close:hover {
-  -webkit-transform: scale(1.1);
-          transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .form-hidden {
   opacity: 0;
-  -webkit-transform: translateY(10px);
-          transform: translateY(10px);
+  transform: translateY(10px);
 }
 
 .banner {
   margin: 20px;
-  -webkit-transition: 0.3s;
   transition: 0.3s;
   position: absolute;
   backdrop-filter: blur(30px);
@@ -250,7 +220,6 @@ form p#close:hover {
   opacity: 0.7;
   margin: 0 5px;
 }
-
 .banner a:hover {
   opacity: 1;
 }
@@ -259,7 +228,6 @@ form p#close:hover {
   position: relative;
   overflow: hidden;
 }
-
 [construction]:after {
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -267,15 +235,9 @@ form p#close:hover {
   bottom: 0;
   left: 0;
   right: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   content: "Under construction";
   font-weight: 900;
@@ -291,28 +253,18 @@ form p#close:hover {
   bottom: 0;
   left: 0;
   right: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
   width: 100vw;
   height: 100vh;
   position: fixed;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   background: 0;
   backdrop-filter: blur(0);
   -webkit-backdrop-filter: blur(0);
   pointer-events: none;
   z-index: 10;
-  -webkit-transition: 0.5s;
   transition: 0.5s;
 }
 
@@ -324,10 +276,8 @@ form p#close:hover {
 }
 
 .modal {
-  -webkit-transition: 0.5s;
   transition: 0.5s;
-  -webkit-transform: translateY(20px);
-          transform: translateY(20px);
+  transform: translateY(20px);
   display: block;
   padding: 40px;
   max-height: 90vh;
@@ -339,7 +289,6 @@ form p#close:hover {
   background: var(--background-color);
   border: var(--border);
 }
-
 .modal h1 {
   margin: 10px;
 }
@@ -354,8 +303,7 @@ form p#close:hover {
 }
 
 .modal.showing {
-  -webkit-transform: translateY(0px);
-          transform: translateY(0px);
+  transform: translateY(0px);
   opacity: 1;
 }
 
@@ -367,7 +315,6 @@ form p#close:hover {
   border-radius: 20px;
   margin: 10px;
 }
-
 .modal .preset h1 {
   font-size: larger;
   margin: 0;
@@ -384,10 +331,8 @@ form p#close:hover {
   padding: 10px;
   z-index: 11;
   color: white;
-  -webkit-transform: translateY(10px) translateX(-50%);
-          transform: translateY(10px) translateX(-50%);
+  transform: translateY(10px) translateX(-50%);
   opacity: 0;
-  -webkit-transition: 0.5s;
   transition: 0.5s;
   -webkit-animation: show-toast 0.5s;
           animation: show-toast 0.5s;
@@ -395,21 +340,17 @@ form p#close:hover {
   -webkit-backdrop-filter: blur(14px) opacity(0);
           backdrop-filter: blur(14px) opacity(0);
 }
-
 .toast.showing {
   opacity: 1;
   -webkit-backdrop-filter: blur(14px) opacity(1);
           backdrop-filter: blur(14px) opacity(1);
-  -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
   left: 50%;
 }
-
 .toast.error {
   background: rgba(255, 0, 0, 0.2);
   border: 1px solid rgba(255, 0, 0, 0.5);
 }
-
 .toast.success {
   background: rgba(60, 255, 0, 0.2);
   border: 1px solid rgba(60, 255, 0, 0.5);
@@ -417,22 +358,19 @@ form p#close:hover {
 
 @-webkit-keyframes show-toast {
   from {
-    -webkit-transform: translateY(-10px) translateX(-50%);
-            transform: translateY(-10px) translateX(-50%);
+    transform: translateY(-10px) translateX(-50%);
     opacity: 0;
   }
 }
 
 @keyframes show-toast {
   from {
-    -webkit-transform: translateY(-10px) translateX(-50%);
-            transform: translateY(-10px) translateX(-50%);
+    transform: translateY(-10px) translateX(-50%);
     opacity: 0;
   }
 }
-
 textarea,
-[type="text"] {
+[type=text] {
   border: 1px solid rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
@@ -441,7 +379,7 @@ textarea,
   font-family: monospace;
 }
 
-[type="checkbox"] {
+[type=checkbox] {
   display: inline-block;
 }
 
@@ -452,21 +390,18 @@ textarea,
   font-size: 12px;
   border-radius: 30px;
   font-weight: 300;
-  text-shadow: 0 0 10px #0084ff, 0 0 10px #0084ff;
+  text-shadow: 0 0 10px rgb(0, 132, 255), 0 0 10px rgb(0, 132, 255);
 }
-
-[beta] [type="checkbox"] {
+[beta] [type=checkbox] {
   display: inline-block;
 }
-
 [beta] [beta]::after {
   content: "BETA";
   margin-left: 5px;
   padding: 4px 6px;
   font-size: 12px;
   border-radius: 30px;
-  -webkit-box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
-          box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
+  box-shadow: 0 0 10px 10px rgba(0, 130, 255, 0.2);
   font-weight: 700;
   background: rgba(0, 130, 255, 0.8);
 }
@@ -475,28 +410,22 @@ textarea,
   border: var(--border);
   background: var(--background-color);
   padding: 0px;
-  border-radius: 20px;
+  border-radius: 10px;
   -webkit-backdrop-filter: 20px;
           backdrop-filter: 20px;
-  -webkit-transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   bottom: 20px;
   overflow: hidden;
   position: fixed;
   right: 20px;
   z-index: 9;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 .quickActions.hidden {
-  -webkit-transform: translateX(120%);
-          transform: translateX(120%);
+  transform: translateX(120%);
 }
-
 .quickActions a {
-  padding: 10px 20px;
+  padding: 6px 14px;
   background: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 15px;
@@ -505,22 +434,24 @@ textarea,
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  -webkit-transition: 0.3s;
   transition: 0.3s;
+  margin: 4px;
+  border-radius: 10px;
   cursor: pointer;
+  border: var(--border);
 }
-
 .quickActions a:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--background-color-hover);
+  border: var(--border-hover);
 }
 
 /* Custom checkbox styles! */
-input[type="checkbox"] + label {
+input[type=checkbox] + label {
   cursor: pointer;
   font-size: 90%;
 }
 
-input[type="checkbox"] {
+input[type=checkbox] {
   /* Remove most all native input styles */
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -530,15 +461,9 @@ input[type="checkbox"] {
   /* Not removed via appearance */
   margin: 0;
   cursor: pointer;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
   font: inherit;
   color: white;
   width: 1.15em;
@@ -546,46 +471,39 @@ input[type="checkbox"] {
   border: var(--border);
   margin-right: 5px;
   border-radius: 0.15em;
-  -webkit-transform: translateY(-0.075em);
-          transform: translateY(-0.075em);
+  transform: translateY(-0.075em);
 }
 
-input[type="checkbox"]::before {
+input[type=checkbox]::before {
   content: "";
   width: 0.65em;
   height: 0.65em;
   -webkit-clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
           clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-  -webkit-transform: scale(0);
-          transform: scale(0);
-  -webkit-transition: 120ms -webkit-transform ease-in-out;
-  transition: 120ms -webkit-transform ease-in-out;
+  transform: scale(0);
   transition: 120ms transform ease-in-out;
-  transition: 120ms transform ease-in-out, 120ms -webkit-transform ease-in-out;
-  -webkit-box-shadow: inset 0.5em 0.5em white;
-          box-shadow: inset 0.5em 0.5em white;
+  box-shadow: inset 0.5em 0.5em white;
   /* Windows High Contrast Mode */
   background-color: CanvasText;
 }
 
-input[type="checkbox"]:checked::before {
-  -webkit-transform: scale(1);
-          transform: scale(1);
+input[type=checkbox]:checked::before {
+  transform: scale(1);
 }
 
-input[type="checkbox"]:checked {
+input[type=checkbox]:checked {
   background: var(--background-color-hover);
   border: var(--border-hover);
 }
 
-input[type="checkbox"]:focus {
+input[type=checkbox]:focus {
   outline: 1px solid currentColor;
 }
 
 /* Custom range slider styles! 
 https://www.w3schools.com/howto/howto_js_rangeslider.asp */
 /* The slider itself */
-input[type="range"] {
+input[type=range] {
   -webkit-appearance: none;
   /* Override default CSS styles */
   -moz-appearance: none;
@@ -598,20 +516,18 @@ input[type="range"] {
   background: var(--background-color-hover);
   outline: none;
   /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: 0.2s;
   /* 0.2 seconds transition on hover */
-  -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
 }
 
 /* Mouse-over effects */
-input[type="range"]:hover {
+input[type=range]:hover {
   opacity: 1;
   /* Fully shown on mouse-over */
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-input[type="range"]::-webkit-slider-thumb {
+input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   /* Override default look */
   appearance: none;
@@ -625,12 +541,12 @@ input[type="range"]::-webkit-slider-thumb {
   /* Cursor on hover */
 }
 
-input[type="range"]:focus-within ::-webkit-slider-thumb {
+input[type=range]:focus-within ::-webkit-slider-thumb {
   outline: 1px solid white;
   background: var(--accent-hover);
 }
 
-input[type="range"]::-moz-range-thumb {
+input[type=range]::-moz-range-thumb {
   width: 18px;
   /* Set a specific slider handle width */
   height: 18px;
@@ -649,13 +565,11 @@ Speedometer
   position: fixed;
   pointer-events: none;
   bottom: 10px;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
   left: 10px;
   font-size: 20px;
   z-index: 59;
 }
-
 #speedometer.hidden {
   left: -100px;
 }
@@ -691,7 +605,6 @@ select {
   padding: 7px 9px;
   border-radius: 10px;
   padding-right: 34px;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
   cursor: pointer;
 }
@@ -709,8 +622,6 @@ select:focus {
   padding: 3px;
   top: calc(50% - 6px);
   right: 9px;
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  transform: rotate(45deg);
   content: "";
-}
-/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */

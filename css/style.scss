@@ -111,7 +111,7 @@ code * {
     transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
     padding: 30px;
 
-    > div {
+    >div {
       padding: 10px;
       border-top: var(--border);
     }
@@ -133,7 +133,7 @@ code * {
     font-size: 30px;
 
     &:hover {
-      border: var(--border-hover);
+      scale: 1.1;
     }
   }
 
@@ -166,6 +166,11 @@ button:hover {
 
 #controls p {
   margin: 5px;
+
+  &.subheading-separator {
+    margin: 2px;
+    margin-top: 10px;
+  }
 }
 
 hr {
@@ -422,7 +427,7 @@ textarea,
   border: var(--border);
   background: var(--background-color);
   padding: 0px;
-  border-radius: 20px;
+  border-radius: 10px;
   backdrop-filter: 20px;
   transition: 0.5s cubic-bezier(0.04, 0.91, 0.54, 0.99);
   bottom: 20px;
@@ -437,23 +442,27 @@ textarea,
   }
 
   a {
-    padding: 10px 20px;
+    padding: 6px 14px;
     background: rgba(255, 255, 255, 0.1);
     color: white;
     font-size: 15px;
     text-decoration: none;
     user-select: none;
     transition: 0.3s;
+    margin: 4px;
+    border-radius: 10px;
     cursor: pointer;
+    border: var(--border);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: var(--background-color-hover);
+      border:var(--border-hover);
     }
   }
 }
 
 /* Custom checkbox styles! */
-input[type="checkbox"] + label {
+input[type="checkbox"]+label {
   cursor: pointer;
   font-size: 90%;
 }
@@ -545,10 +554,12 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   /* Cursor on hover */
 }
+
 input[type="range"]:focus-within ::-webkit-slider-thumb {
   outline: 1px solid white;
   background: var(--accent-hover);
 }
+
 input[type="range"]::-moz-range-thumb {
   width: 18px;
   /* Set a specific slider handle width */
@@ -573,6 +584,7 @@ Speedometer
   left: 10px;
   font-size: 20px;
   z-index: 59;
+
   &.hidden {
     left: -100px;
   }
@@ -613,6 +625,7 @@ select:focus {
   background: var(--background-color-hover);
   border: var(--border-hover);
 }
+
 .select-wrap::before {
   position: absolute;
   border-right: 1px solid white;
