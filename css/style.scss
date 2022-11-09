@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bevan&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @mixin flex {
   display: flex;
@@ -87,6 +87,10 @@ code {
 
 code * {
   font-family: monospace;
+}
+
+small {
+  opacity: 0.7;
 }
 
 #controls {
@@ -247,25 +251,6 @@ form p#close:hover {
 
   &:hover {
     opacity: 1;
-  }
-}
-
-[construction] {
-  position: relative;
-  overflow: hidden;
-
-  &:after {
-    @include blur(3px);
-    @include fixedPosition(0, 0, 0, 0);
-    @include flex;
-    position: absolute;
-    content: "Under construction";
-    font-weight: 900;
-    font-family: "Bevan", "Rockwell", "Impact", sans-serif;
-    cursor: not-allowed;
-    background: rgba(30, 38, 105, 0.938);
-    border-radius: 10px;
-    border: 2px dashed rgba(55, 65, 211, 0.9);
   }
 }
 

@@ -174,7 +174,7 @@
             </select>
           </div>
           <br />
-          <small style="opacity: 0.7"
+          <small
             >Want to add a preset? Create a pull request on
             <a href="https://github.com/pineapplerind/bezier-visualizer/pulls"
               >GitHub</a
@@ -202,8 +202,8 @@
           </p>
           <button id="loadSaveDataBtn">Load Save Data</button>
           <br />
-          <small style="opacity: 0.7">Your save data is refreshed if you have not visited the page for more than 60 days.</small><br>
-          <small style="opacity: 0.7" id="noCookieDisclaimer">If you have disabled cookies, this data won't be saved at all.</small>
+          <small>Your save data is refreshed if you have not visited the page for more than 60 days.</small><br>
+          <small id="noCookieDisclaimer">If you have disabled cookies, this data won't be saved at all.</small>
         </div>
         <div>
           <h2>how it works</h2>
@@ -229,6 +229,8 @@
           >
         </div>
 
+        <small class="foot">Version: <span id="version"></span></small>
+
         <div class="banner">
           <p>
             To temporarily save your settings (and for no other purpose), this
@@ -237,6 +239,7 @@
           <a id="bannerDontStore" href="#">Don't store cookies</a>
           <button id="bannerClose">Close</button>
         </div>
+
       </div>
     </div>
 
@@ -248,7 +251,8 @@
     <div id="modalOverlay"></div>
     <p id="speedometer" class="hidden"></p>
     <script src="js/index.js"></script>
-    <script></script>
+    <script name="version"> document.querySelector('#version').innerText = window.__version__ </script>
+    <script> </script>
   </body>
 </html>
 

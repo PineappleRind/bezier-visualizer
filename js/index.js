@@ -12,6 +12,9 @@ void (function () {
   // jquery-like shorthand
   const $ = document.querySelector.bind(document);
 
+  // set version
+  window.__version__ = '1.1.1';
+  
   // Lerp Function
   const lerp = (start, end, amt) =>
     Math.round(((1 - amt) * start + amt * end) * 100) / 100;
