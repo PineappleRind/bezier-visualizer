@@ -135,8 +135,8 @@ function addPreset() {
              <input type="checkbox" value="lines" id="plines" checked><label for="plines">Show lines</label><br>
              <input type="checkbox" value="midpoints"id="pmidpoints" checked><label for="pmidpoints">Show midpoints</label><br>
              <input type="checkbox" value="trail" id="ptrail" checked><label for="ptrail">Show trail</label><br>
-             <input type="checkbox" value="controlpoints" id="pcontrolpoints" checked><label for="pcontrolpoints">Show control points</label><br>
-             <input type="checkbox" value="finalmidpoint" id="pfinalmidpoint" checked><label for="pfinalmidpoint">Show final midpoints</label><br>
+             <input type="checkbox" value="controlPoints" id="pcontrolPoints" checked><label for="pcontrolPoints">Show control points</label><br>
+             <input type="checkbox" value="finalPoint" id="pfinalPoint" checked><label for="pfinalPoint">Show final midpoints</label><br>
          </div><br>
        <p style="width:400px">Each point's x & y coordinates is wrapped in brackets []. Example: [100, 130]. This will make a point at x 100 and y 130.</p>
        <br>

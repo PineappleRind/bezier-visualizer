@@ -4,95 +4,15 @@
  * Oct 2021 - present
  * PineappleRind — pineapplerind.xyz
  *************/
+import Bezier from "./Bezier";
 
-void (function () {
   // i'm aware this code may not be the *best*
   // but it works & it's pretty readable
 
-  // jquery-like shorthand
-  const $ = document.querySelector.bind(document);
-
   // set version
-  window.__version__ = '1.1.1';
-  
-  // Lerp Function
-  const lerp = (start, end, amt) =>
-    Math.round(((1 - amt) * start + amt * end) * 100) / 100;
+  window.__version__ = "1.1.1";
 
-  // Bitfield object
-  var bits = {
-    lines: 0b00001,
-    midpoints: 0b00010,
-    trail: 0b00100,
-    controlpoints: 0b01000,
-    finalmidpoint: 0b10000,
-    total: () => {
-      let sum = 0;
-      for (let i in bits) {
-        if (bits[i] && typeof bits[i] === "number") sum += bits[i];
-      }
-      return sum;
-    },
-    compare: (a) => (saveData.settings.show & a) === a,
-  };
-  // save data template object
-  var saveData = {
-    data: [
-      [331, 351], [38, 351], [331, 14], [38, 14],
-    ],
-    presets: [
-      {
-        name: "Default",
-        data: [
-          [30, 250], [250, 250], [30, 30], [250, 30],
-        ],
-        show: null,
-      },
-      {
-        name: "Bow",
-        data: [
-          [143, 323], [482, 25], [54, 21], [113, 373], [231, 298], [482, 25], [54, 21], [279, 300], [371, 381], [483, 25], [54, 20], [357, 324],
-        ],
-        show: null,
-      },
-      {
-        name: "Cursive f",
-        data: [
-          [193, 313], [513, 246], [42, 42], [410, 6], [120, 586], [567, 521], [53, 339], [332, 283],
-        ],
-        show: null,
-      },
-      {
-        name: "Music note",
-        data: [
-          [280, 240], [119, 241], [340, 40], [140, 40], [140, 500], [400, 500], [40, 340], [210, 340],
-        ],
-      },
-      {
-        name: "Warp: infinity",
-        data: [
-          [683, 396], [592, 368], [737, 382], [799, 228], [764, 49], [639, 8], [456, 144], [260, 331], [97, 398], [9, 282], [16, 91], [118, 0], [288, 93], [486, 284], [618, 384], [775, 330], [796, 142], [719, 8], [565, 50], [370, 230], [158, 393], [48, 367], [0, 198], [50, 31], [185, 19], [373, 174], [568, 353], [722, 391], [796, 254], [774, 67], [660, 2], [483, 119], [285, 310], [115, 400], [15, 306], [10, 114], [100, 2], [263, 71], [460, 259], [642, 393], [765, 349], [799, 168], [735, 17], [589, 34], [396, 204], [205, 370], [62, 380], [1, 225], [38, 46], [163, 9],
-        ],
-        show: bits.midpoints,
-      },
-      {
-        name: "Warp: circle",
-        data: [
-          [300, 600], [552, 462], [573, 175], [342, 3], [73, 104], [12, 385], [216, 588], [495, 528], [597, 256], [424, 27], [137, 48], [0, 301], [139, 553], [426, 572], [597, 341], [495, 72], [214, 13], [12, 217], [75, 498], [345, 597], [574, 422], [551, 136], [297, 0], [46, 140], [28, 427], [260, 597], [529, 494], [587, 212], [381, 11], [101, 76], [4, 346], [179, 574], [465, 550], [600, 296], [459, 45], [172, 29], [2, 262], [107, 530], [389, 587], [589, 380], [524, 100], [252, 4], [25, 180], [50, 467], [305, 600], [555, 458], [571, 170], [337, 2], [70, 108], [14, 390], [221, 589], [501, 523], [596, 251], [419, 25], [132, 51], [0, 307], [144, 556], [431, 570], [598, 336], [491, 69], [209, 14], [10, 223], [78, 502], [350, 596], [576, 418], [548, 131], [292, 0], [43, 145], [31, 432], [266, 598], [532, 490], [585, 207], [376, 10], [97, 79], [4, 352], [184, 577], [470, 547], [600, 291], [454, 43], [167, 31], [2, 267], [111, 533], [394, 585], [591, 375], [520, 96], [247, 5], [23, 185], [53, 471], [311, 600], [558, 453], [568, 166], [332, 2], [66, 112], [16, 395], [226, 591], [505, 519], [595, 246], [414, 22], [128, 54], [0, 312],
-        ],
-        show: bits.midpoints,
-      },
-    ],
-    settings: {
-      speed: 0.003,
-      ease: "easeInOutQuad",
-      // show everything
-      show: bits.total(),
-      colorAlgorithm: "goldenAngle",
-      noCookies: undefined,
-    },
-    expiry: Date.now() + (1000 * 60 * 60 * 24 * 60),
-  };
+;
   // Keybinds
   let keybinds = {
     " ": () => {
@@ -128,11 +48,11 @@ void (function () {
 
   if (!save.data) save.set();
   saveData = save.data;
-  
+
   // If data has expired
   if (saveData?.expiry < Date.now() || !saveData.expiry) {
     // Remove the data
-    localStorage.removeItem('bezierSaveData');
+    localStorage.removeItem("bezierSaveData");
     // Clear the data variable
     saveData = {};
     // Repopulate data by reloading
@@ -240,28 +160,6 @@ void (function () {
     document.body.appendChild(toast);
   }
 
-  // canvas manager
-  var canvas = {
-    element: $("#canvas"),
-    context: $("#canvas").getContext("2d"),
-    clear: function () {
-      canvas.context.clearRect(
-        0,
-        0,
-        canvas.element.width,
-        canvas.element.height
-      );
-    },
-  };
-  // trail manager
-  var trail = {
-    element: $("#canvas2"),
-    context: $("#canvas2").getContext("2d"),
-    clear: function () {
-      trail.context.clearRect(0, 0, trail.element.width, trail.element.height);
-    },
-  };
-
   function addPoint(x, y) {
     colorIteration++;
     colors.push(
@@ -270,35 +168,8 @@ void (function () {
     (x = 0 || x), (y = 0 || y);
     saveData.data.push([x, y]);
     toIterate = saveData.data.length - 1;
-    initialPoints();
+    Renderer.render();
     save.set();
-  }
-
-  // this is the algorithm itself
-  // this stumped me for a week 😅
-  function compute(easedT) {
-    toIterate = saveData.data.length - 1;
-    // array filled with arrays with length of toIterate
-    computed = Array.from(
-      {
-        length: toIterate,
-      },
-      () => []
-    );
-
-    // for each iteration of midpoints:
-    for (let i = 0; i < toIterate; i++) {
-      // for each point in the iteration of midpoints:
-      for (let point = 0; point < toIterate - i; point++) {
-        // if it's the first iteration, compute based on the control points.
-        // otherwise base it on the previous iteration's midpoints
-        let lerpOn = i === 0 ? saveData.data : computed[i - 1];
-        computed[i].push([
-          lerp(lerpOn[point][0], lerpOn[point + 1][0], easedT),
-          lerp(lerpOn[point][1], lerpOn[point + 1][1], easedT),
-        ]);
-      }
-    }
   }
 
   function resizeHandler() {
@@ -312,55 +183,6 @@ void (function () {
     resizeHandler();
     initialPoints();
   };
-  // shorthand draw functions for canvas
-  const draw = {
-    point(x, y, rad, color) {
-      canvas.context.beginPath();
-      canvas.context.arc(x, y, rad, 0, 2 * Math.PI, true);
-      canvas.context.closePath();
-      if (!color) canvas.context.fillStyle = "#ffffff";
-      else canvas.context.fillStyle = color;
-      canvas.context.fill();
-    },
-    line(startx, starty, finishx, finishy) {
-      canvas.context.beginPath();
-      canvas.context.strokeStyle = "#ffffff";
-      canvas.context.moveTo(startx, starty);
-      canvas.context.lineTo(finishx, finishy);
-      canvas.context.stroke(); // Bottom side line
-    },
-    trail(x, y, prevX, prevY) {
-      if (!bits.compare(bits.trail)) return;
-      if ((!prevX && !prevY) || t < 0.03) (prevX = x), (prevY = y);
-      const { context } = trail;
-      const dist = (point1, point2) =>
-        Math.sqrt(
-          Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2)
-        );
-      let distance = dist({ x: prevX, y: prevY }, { x, y });
-      if (distance > Math.PI * 2) {
-        // If the points are too far from each other..
-        for (let i = 0; i < distance; i++) {
-          context.beginPath(); // Fill them in!
-          context.fillStyle = "#ffffff";
-          context.arc(
-            lerp(prevX, x, i / distance),
-            lerp(prevY, y, i / distance),
-            10,
-            0,
-            Math.PI * 2,
-            true
-          );
-          context.fill();
-        }
-      }
-
-      context.beginPath();
-      context.fillStyle = "#ffffff";
-      context.arc(x, y, 10, 0, Math.PI * 2, true);
-      context.fill();
-    },
-  };
 
   /*************
    * Button Handlers
@@ -373,7 +195,8 @@ void (function () {
     $("#controls").classList.toggle("hidden");
   };
 
-  $("#playBtn").onclick = $("#quickPlay").onclick = () => controls.playing = !controls.playing;
+  $("#playBtn").onclick = $("#quickPlay").onclick = () =>
+    (controls.playing = !controls.playing);
   $("#replayBtn").onclick = replay;
   $("#quickReplay").onclick = replay;
   $("#resetCurveBtn").onclick = resetCurve;
@@ -567,58 +390,6 @@ void (function () {
     );
   }
 
-  // draw the control points & lines
-  function initialPoints() {
-    const { data: d } = saveData;
-    for (var i = 0; i < d.length; i++) {
-      // if the user is showing lines
-      // draw a line between it and the next one
-      if (bits.compare(bits.lines) && i < d.length - 1)
-        draw.line(d[i][0], d[i][1], d[i + 1][0], d[i + 1][1]);
-
-      // if the user is showing control points
-      // draw a control point
-      if (bits.compare(bits.controlpoints))
-        draw.point(d[i][0], d[i][1], 10, colors[i]); // Anchor dots
-    }
-  }
-
-  // draw the midpoints computed by compute()
-  function drawMidPoints() {
-    // for each iteration of midpoints
-    for (let i = 0; i < computed.length; i++) {
-      // for each midpoint in that iteration
-      for (let j = 0; j < computed[i].length; j++) {
-        // default dot radius = 3px
-        let radius = 3;
-        // final midpoint radius = 10px
-        if (i === computed.length - 1 && bits.compare(bits.finalmidpoint))
-          radius = 10;
-
-        // user is showing midpoints? draw the point
-        if (
-          bits.compare(bits.midpoints) ||
-          (radius === 10 && bits.compare(bits.finalmidpoint))
-        ) {
-          draw.point(computed[i][j][0], computed[i][j][1], radius);
-        }
-
-        // user is showing lines? draw lines in between midpoints
-        if (bits.compare(bits.lines) && j > 0)
-          draw.line(
-            computed[i][j][0],
-            computed[i][j][1],
-            computed[i][j - 1][0],
-            computed[i][j - 1][1]
-          );
-
-        // return if done
-        if (i === computed.length - 1)
-          return [computed[i][j][0], computed[i][j][1]];
-      }
-    }
-  }
-
   // update ease option when user changes
   $("#easeOption").oninput = function () {
     saveData.settings.ease = $("#easeOption").value;
@@ -643,9 +414,9 @@ void (function () {
     }
 
     // this just assumes the target is a showCheckbox
-    let toChange = target.getAttribute("id");
-    if (bits[toChange]) {
-      saveData.settings.show ^= bits[toChange];
+    let showTarget = target.getAttribute("id");
+    if (show[showTarget]) {
+      saveData.settings.show ^= show[showTarget];
       save.set();
     }
   };
@@ -658,7 +429,7 @@ void (function () {
       let cur = cs[i];
       // uncheck it
       cur.checked = false;
-      if (bits.compare(bits[cur.getAttribute("id")])) {
+      if (show.isShowing(show[cur.getAttribute("id")])) {
         // re-check it if the show bitfield says so :)
         cur.checked = true;
       }
@@ -765,8 +536,8 @@ void (function () {
   resizeHandler();
 
   // Update animation speed value
-  $("#animationSpeed").value = $("#animationSpeedLabel").innerHTML = saveData.settings.speed.toFixed(4);
+  $("#animationSpeed").value = $("#animationSpeedLabel").innerHTML =
+    saveData.settings.speed.toFixed(4);
 
   // Start the animation
   controls.playing = true;
-})();
